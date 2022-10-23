@@ -1,20 +1,18 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace TouchInput
 {
     public class TouchInput : MonoBehaviour, ITouchMovement
     {
-        private const float MIN_DST_FOR_BOX_SELECT = 50;
+        private const float MIN_DST_FOR_DRAG = 20;
 
-        public enum StateTypes { Null, StartTap, Drag}
         [SerializeField] private StateTypes state;
 
         public ITouchMovement.TouchAction OnClick { get; set; }
-        public ITouchMovement.TouchAction OnStartSelect { get; set; }
-        public ITouchMovement.DragAction OnEndSelect { get; set; }
-        public ITouchMovement.DragAction OnDrag { get; set; }
+        public ITouchMovement.TouchAction OnStartDrag { get; set; }
+        public ITouchMovement.TouchAction OnEndDrag { get; set; }
+        public ITouchMovement.TouchAction OnDrag { get; set; }
 
 
         private bool touched;
@@ -37,7 +35,7 @@ namespace TouchInput
                 switch (state)
                 {
                     case StateTypes.Drag:
-                        OnDrag?.Invoke(startTapPosition, Input.mousePosition);
+                        OnDrag?.Invoke(new TapInfo(0, startTapPosition, Input.mousePosition, state));
                         break;
                 }
             }
@@ -45,7 +43,7 @@ namespace TouchInput
 
         private IEnumerator WaitForDragSelect()
         {
-            while ((startTapPosition - Input.mousePosition).magnitude < MIN_DST_FOR_BOX_SELECT)
+            while ((startTapPosition - Input.mousePosition).magnitude < MIN_DST_FOR_DRAG)
             {
                 if (!touched)
                 {
@@ -55,7 +53,7 @@ namespace TouchInput
             }
 
             state = StateTypes.Drag;
-            OnStartSelect?.Invoke(Input.mousePosition);
+            OnStartDrag?.Invoke(new TapInfo(0, startTapPosition, Input.mousePosition, state));
             yield break;
         }
         private void OnStartTap(Vector2 position)
@@ -63,16 +61,18 @@ namespace TouchInput
             startTapPosition = position;
             state = StateTypes.StartTap;
             touched = true;
+
+            StartCoroutine(WaitForDragSelect());
         }
         private void OnEndTap(Vector2 position)
         {
             switch(state)
             {
                 case StateTypes.Drag:
-                    OnEndSelect?.Invoke(startTapPosition, position);
+                    OnEndDrag?.Invoke(new TapInfo(0, startTapPosition, position, state));
                     break;
                 case StateTypes.StartTap:
-                    OnClick?.Invoke(position);
+                    OnClick?.Invoke(new TapInfo(0, startTapPosition, position, state));
                     break;
             }
 
@@ -85,17 +85,6 @@ namespace TouchInput
             MouseInput();
         }
 
-        public struct TapInfo 
-        {
-            public TapInfo(Vector2 point, StateTypes state)
-            {
-                this.point = point;
-                this.state = state;
-            }
 
-            public readonly StateTypes state;
-            public readonly Vector2 point;
-            
-        }
     }
 }

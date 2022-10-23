@@ -1,8 +1,10 @@
 {
-    "name": "TouchInput",
-    "rootNamespace": "TouchInput",
+    "name": "Cards",
+    "rootNamespace": "Cards",
     "references": [
-        "GUID:0021b44b087a0ed4caeb1fab80ad5567"
+        "GUID:b3626bab325e0ad47bc5c1b0b9b5344b",
+        "GUID:22fe0476dbc3fdd409c623504c1b9f66",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
