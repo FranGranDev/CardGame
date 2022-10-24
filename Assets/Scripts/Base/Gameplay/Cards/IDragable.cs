@@ -9,6 +9,7 @@ namespace Cards
 
     public interface IDragable
     {
+        public bool Takable { get; set; }
         public Transform Body { get; }
 
         public void Interact(MoveInfo info);

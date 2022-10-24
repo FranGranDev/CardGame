@@ -46,8 +46,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   index: 0
   type: 0
-  number: {fileID: 0}
-  icon: {fileID: 0}
+  numbers: []
+  icons: []
 --- !u!1 &4242913247431906191
 GameObject:
   m_ObjectHideFlags: 0

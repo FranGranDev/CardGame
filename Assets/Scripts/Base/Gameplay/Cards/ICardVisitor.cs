@@ -5,6 +5,6 @@ namespace Cards
 {
     public interface ICardVisitor
     {
-        public void Visit(DurakCard card);
+        public void Visit(Card card);
     }
 }

@@ -1,22 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
-using UnityEngine.UI;
+
 
 namespace Cards
 {
     public abstract class Card : MonoBehaviour, IDragable
     {
-        [Header("Settings")]
-        [SerializeField] private int index;
-        [SerializeField] private Types type;
-
-        [Header("Components")]
-        [SerializeField] private TextMeshPro number;
-        [SerializeField] private Image icon;
-
-
+        public bool Takable { get; set; } = true;
         public Transform Body { get => transform; }
 
 
@@ -26,7 +17,8 @@ namespace Cards
         public CardAction OnDropped { get; set; }
 
         #endregion
-
+        
+        public PlayerWrapper Owner { get; set; }
 
         public abstract void Interact(MoveInfo info);
         public abstract void Take(MoveInfo info);
@@ -34,13 +26,5 @@ namespace Cards
         public abstract void Drag(MoveInfo info);
 
         public abstract void Accept(ICardVisitor visitor);
-
-        public enum Types
-        {
-            Spades,
-            Diamonds,
-            Clubs,
-            Hearts,
-        }
     }
 }
