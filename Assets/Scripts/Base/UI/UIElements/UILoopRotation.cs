@@ -7,6 +7,7 @@ namespace UI
     public class UILoopRotation : MonoBehaviour, IAddictive
     {
         [SerializeField] private float speed = 1;
+        [SerializeField] private bool playAlways = false;
 
         public bool IsPlaying { private get; set; }
 
@@ -16,7 +17,7 @@ namespace UI
         }
         private void FixedUpdate()
         {
-            if (IsPlaying)
+            if (IsPlaying || playAlways)
             {
                 transform.Rotate(Vector3.forward, speed * Time.fixedDeltaTime);
             }

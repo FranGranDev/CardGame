@@ -36,6 +36,11 @@ public abstract class UiBehavior : IUiBehavior
     }
     private bool isShown;
 
+    public virtual void Initilize()
+    {
+
+    }
+
     public bool IsPlaying { get; protected set; }
     public abstract void Show();
     public abstract void Hide();
@@ -44,7 +49,7 @@ public abstract class UiBehavior : IUiBehavior
 [System.Serializable]
 public sealed class UiAnimationData
 {
-    public float time = 1f;
+    public float time = 0.5f;
     public float delay = 0f;
     public Ease ease = Ease.InOutSine;
 }

@@ -72,7 +72,7 @@ namespace UI
                 OnComplete(() => onComplete?.Invoke());
         }
 
-        public void Init()
+        public void Initilize()
         {
             if (panel && checkIAddictive)
             {
