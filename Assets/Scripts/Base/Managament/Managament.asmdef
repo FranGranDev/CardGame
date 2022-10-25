@@ -1,0 +1,20 @@
+{
+    "name": "Managament",
+    "rootNamespace": "",
+    "references": [
+        "GUID:831409e8f9d13b5479a3baef9822ad34",
+        "GUID:57c32fc907df0f54e8e6e8f0d2488336",
+        "GUID:2e43d0fd8b290cb4da462f7e76bf7d31",
+        "GUID:688fe31e0cd84a140a04377614164520",
+        "GUID:0021b44b087a0ed4caeb1fab80ad5567"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

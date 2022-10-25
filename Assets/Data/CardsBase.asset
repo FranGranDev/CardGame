@@ -12,3 +12,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a106442471bebb4fad70482cb8f85d6, type: 3}
   m_Name: CardsBase
   m_EditorClassIdentifier: 
+  cardSkins:
+  - Name: 6
+    index: 0
+    material: {fileID: 2100000, guid: 18db06f90c239754986f5146f34eb843, type: 2}
+    image: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
+  - Name: 7
+    index: 1
+    material: {fileID: 2100000, guid: 18db06f90c239754986f5146f34eb843, type: 2}
+    image: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
+  - Name: 8
+    index: 2
+    material: {fileID: 2100000, guid: 18db06f90c239754986f5146f34eb843, type: 2}
+    image: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
+  - Name: 9
+    index: 3
+    material: {fileID: 2100000, guid: 18db06f90c239754986f5146f34eb843, type: 2}
+    image: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
+  - Name: 10
+    index: 4
+    material: {fileID: 2100000, guid: 18db06f90c239754986f5146f34eb843, type: 2}
+    image: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
+  - Name: J
+    index: 5
+    material: {fileID: 2100000, guid: 18db06f90c239754986f5146f34eb843, type: 2}
+    image: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
+  - Name: Q
+    index: 6
+    material: {fileID: 2100000, guid: 18db06f90c239754986f5146f34eb843, type: 2}
+    image: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
+  - Name: "\u041A"
+    index: 7
+    material: {fileID: 2100000, guid: 18db06f90c239754986f5146f34eb843, type: 2}
+    image: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
+  - Name: A
+    index: 8
+    material: {fileID: 2100000, guid: 18db06f90c239754986f5146f34eb843, type: 2}
+    image: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
+  suitIcons:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  prefab: {fileID: 0}
