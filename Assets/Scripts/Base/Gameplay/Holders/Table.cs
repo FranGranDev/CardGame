@@ -49,11 +49,7 @@ namespace Cards
         }
 
     
-        private void Start()
-        {
-            Initilize();
-        }
-        private void Initilize()
+        public void Initilize()
         {
             cardPairs = new List<CardPair>();
             comparator = new DurakCardComparator(DurakCard.SuitTypes.Hearts);

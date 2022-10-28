@@ -17,12 +17,20 @@ namespace Managament
 
         #region Links
 
+        [Header("Links")]
         [SerializeField] private Table table;
         [SerializeField] private PlayerCamera playerCamera;
         [SerializeField] private Hand player;
         [SerializeField] private Hand enemy;
+        [SerializeField] private Deck deck;
+        [SerializeField] private CardFactory cardFactory;
 
         #endregion
 
+
+        private void Start()
+        {
+            table.Initilize();
+        }
     }
 }
