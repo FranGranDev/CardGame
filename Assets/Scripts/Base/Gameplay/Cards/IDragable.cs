@@ -17,7 +17,7 @@ namespace Cards
         public void Drop(ICardHolder holder, MoveInfo info);
         public void Drag(MoveInfo info);
 
-        public void Accept(ICardVisitor visitor);
+        public void Accept(ICardVisitor visitor, object data = null);
 
 
         public CardAction OnTaken { get; set; }

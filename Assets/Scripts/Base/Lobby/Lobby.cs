@@ -238,8 +238,18 @@ namespace Lobby
         {
             if(selfItem)
             {
-                selfItem.IsReady = !selfItem.IsReady;
-
+                switch(buttonState)
+                {
+                    case ButtonStateTypes.MakeNotReady:
+                        selfItem.IsReady = false;
+                        break;
+                    case ButtonStateTypes.MakeReady:
+                        selfItem.IsReady = true;
+                        break;
+                    case ButtonStateTypes.StartGame:
+                        SceneManager.LoadScene(1);
+                        return;
+                }
                 PhotonView.Get(this).RPC(nameof(UpdatePlayerState), RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber, selfItem.IsReady);
 
                 UpdateButtonState();

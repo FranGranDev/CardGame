@@ -6,7 +6,6 @@ namespace Cards.Data
     public class CardFactory : MonoBehaviour
     {        
         [SerializeField] private CardVisualData data;
-        
 
 
         public DurakCard CreateCard(int index, DurakCard.SuitTypes suit)

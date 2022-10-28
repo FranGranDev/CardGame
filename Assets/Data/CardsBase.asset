@@ -41,7 +41,7 @@ MonoBehaviour:
     index: 6
     material: {fileID: 2100000, guid: 18db06f90c239754986f5146f34eb843, type: 2}
     image: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
-  - Name: "\u041A"
+  - Name: K
     index: 7
     material: {fileID: 2100000, guid: 18db06f90c239754986f5146f34eb843, type: 2}
     image: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
@@ -50,8 +50,8 @@ MonoBehaviour:
     material: {fileID: 2100000, guid: 18db06f90c239754986f5146f34eb843, type: 2}
     image: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
   suitIcons:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  prefab: {fileID: 0}
+  - {fileID: 21300000, guid: 635bfaa35aa88a54a8ec3fdc1dbffb16, type: 3}
+  - {fileID: 21300000, guid: 4886b3f549413a049b64b38b8d2a298d, type: 3}
+  - {fileID: 21300000, guid: eae267e5875837d40884ac1555ad223e, type: 3}
+  - {fileID: 21300000, guid: ed7f9e69fee13034798b9107cd470b95, type: 3}
+  prefab: {fileID: 1979355996101306093, guid: 57fd8cad82f089a45bba844e16a065e5, type: 3}

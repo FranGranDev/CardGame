@@ -39,7 +39,7 @@ namespace TouchInput
             if(Physics.Raycast(ray, out hit, 100, cardMask))
             {
                 IDragable card = hit.transform.GetComponentInParent<IDragable>();
-                if(card != null)
+                if(card != null && card.Takable)
                 {
                     Interact(card, new MoveInfo(hit));
                 }
@@ -52,7 +52,7 @@ namespace TouchInput
             if (Physics.Raycast(ray, out hit, 500, cardMask))
             {
                 IDragable card = hit.transform.GetComponentInParent<IDragable>();
-                if (card != null)
+                if (card != null && card.Takable)
                 {
                     Take(card, info, new MoveInfo(hit));
                 }

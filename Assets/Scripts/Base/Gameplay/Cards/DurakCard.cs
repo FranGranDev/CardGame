@@ -13,15 +13,36 @@ namespace Cards
 
         [Header("Components")]
         [SerializeField] private List<TextMeshPro> numbers;
-        [SerializeField] private List<Image> icons;
+        [SerializeField] private List<SpriteRenderer> icons;
 
+        private bool visible = true;
 
         public int Index => index;
         public SuitTypes Suit => suit;
 
+        public override bool Takable
+        {
+            get;
+            set;
+        }
+        public override bool Visible
+        {
+            get => visible;
+            set
+            {
+                visible = value;
+            }
+        }
 
+
+        public override void Initilize()
+        {
+            base.Initilize();
+        }
         public void Initilize(int index, SuitTypes suit)
         {
+
+
             this.index = index;
             this.suit = suit;
         }
@@ -30,6 +51,10 @@ namespace Cards
             foreach(TextMeshPro text in numbers)
             {
                 text.text = name;
+            }
+            foreach(SpriteRenderer icon in icons)
+            {
+                icon.sprite = suit;
             }
         }
 
@@ -47,17 +72,16 @@ namespace Cards
             transform.position = info.position;
             transform.up = info.normal;
 
-            holder.Drop(this);
+            holder.Drop(this, new DropCardData { Sender = DropCardData.SenderTypes.Self});
         }
         public override void Drag(MoveInfo info)
         {
             transform.position = info.position;
             transform.up = info.normal;
         }
-
-        public override void Accept(ICardVisitor visitor)
+        public override void Accept(ICardVisitor visitor, object data = null)
         {
-            visitor.Visit(this);
+            visitor.Visit(this, data);
         }
 
 

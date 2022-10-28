@@ -1,4 +1,3 @@
-using Cards;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,6 +16,8 @@ namespace Cards
         [SerializeField] private Hand player1;
         [SerializeField] private Hand player2;
 
+
+        public int CardsCount => 0;
 
         public int CurrantMove
         {
@@ -59,11 +60,11 @@ namespace Cards
         }
 
 
-        public void Drop(IDragable card)
+        public void Drop(IDragable card, DropCardData data)
         {
-            card.Accept(this);
+            card.Accept(this, null);
         }
-        public void Visit(Card card)
+        public void Visit(Card card, object data = null)
         {
             
         }

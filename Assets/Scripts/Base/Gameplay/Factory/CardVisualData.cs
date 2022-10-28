@@ -16,7 +16,7 @@ namespace Cards.Data
             {4, "10"},
             {5, "J"},
             {6, "Q"},
-            {7, "К"},
+            {7, "K"},
             {8, "A"},
         };
         [SerializeField] private List<CardSkinInfo> cardSkins = new List<CardSkinInfo>();

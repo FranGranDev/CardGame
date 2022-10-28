@@ -17,82 +17,92 @@ namespace Cards
         [Header("Points")]
         [SerializeField] private Transform leftPoint;
         [SerializeField] private Transform rightPoint;
+        [Header("Links")]
+        [SerializeField] private CardFactory cardFactory;
 
-        public CardFactory cardFactory;
 
         private List<Card> cards = new List<Card>();
 
-
+        public int CardsCount => cards.Count;
         public List<Card> Cards => cards;
 
 
         #region Initilize
-        private void Awake()
+        public void Initilize()
         {
-            Initilize();
+
         }
 
-        private void Initilize()
-        {
-            GetCards();
-        }
-        private void GetCards()
-        {
-            IDragable[] temp = cardPlace.GetComponentsInChildren<IDragable>();
-            foreach(IDragable card in temp)
-            {
-                Drop(card);
-            }
-
-            SortCards();
-        }
-        private void CreateRandomCards()
-        {
-            for(int i = 0; i < 6; i++)
-            {
-
-            }
-        }
-
-        public void InitilizeCards(PlayerWrapper player)
-        {
-            foreach(Card card in cards)
-            {
-                card.Owner = player;
-            }
-        }
 
         #endregion
 
         #region CardMoving
 
-        public void Drop(IDragable card)
+        public void Drop(IDragable card, DropCardData data)
         {
-            card.Accept(this);
+            card.Accept(this, data);
         }
-        public void Visit(Card card)
+        public void Visit(Card card, object data = null)
         {
-            AddCard(card);
+            try
+            {
+                DropCardData info = data as DropCardData;
 
-            card.Takable = true;
+                AddCard(card);
 
-            SortCards();
+                switch(info.Sender)
+                {
+                    case DropCardData.SenderTypes.Self:
+                        card.Takable = true;
+                        SortCards();
+                        break;
+                    case DropCardData.SenderTypes.Dect:
+                        card.Takable = false;
+                        int index = Cards.IndexOf(card);
+                        card.FlyTo(CardPosition(index), CardRotation(index), 1f, ICardAnimation.Order.Override, () =>
+                        {
+                            card.Takable = true;
+                            SortCards();
+                        });
+                        break;
+                    case DropCardData.SenderTypes.Others:
+
+                        break;
+                }
+
+            }
+            catch{ }
         }
 
         private void SortCards()
-        {
-            float count = 0.5f;
-            Vector3 offsetY = Vector3.zero;
-            foreach(Card card in cards)
-            {
-                float ratio = count / (float)cards.Count;
-                Vector3 offsetZ = cardPlace.forward * placeCurve.Evaluate(ratio) * placeOffsetZ;
-                card.Body.position = Vector3.Lerp(leftPoint.position, rightPoint.position, ratio) + offsetY + offsetZ;
-                card.Body.rotation = Quaternion.LookRotation(Vector3.Lerp(leftPoint.forward, rightPoint.forward, ratio), cardPlace.up);
-                offsetY += cardPlace.up * 0.1f;
+        {   
+            cards.OrderBy(x => x.transform.position.x);
 
-                count++;
+            int i = 0;
+            foreach (Card card in cards)
+            {
+                Vector3 position = CardPosition(i);
+                Quaternion rotation = CardRotation(i);
+
+                card.MoveTo(position, rotation, 0.25f, ICardAnimation.Order.IfNotPlaying);
+
+                i++;
             }
+        }
+
+        private Vector3 CardPosition(int cardIndex)
+        {
+            float ratio = ((float)cardIndex + 0.5f) / (float)cards.Count;
+            Vector3 offsetZ = cardPlace.forward * placeCurve.Evaluate(ratio) * placeOffsetZ;
+            Vector3 offsetY = cardPlace.up * cardIndex * 0.1f;
+
+            return Vector3.Lerp(leftPoint.position, rightPoint.position, ratio) + offsetY + offsetZ;
+        }
+        private Quaternion CardRotation(int cardIndex)
+        {
+            float ratio = ((float)cardIndex + 0.5f) / (float)cards.Count;
+
+            return Quaternion.LookRotation(Vector3.Lerp(leftPoint.forward, rightPoint.forward, ratio), cardPlace.up);
         }
 
         #endregion
