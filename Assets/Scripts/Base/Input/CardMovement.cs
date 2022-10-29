@@ -82,8 +82,16 @@ namespace TouchInput
                 Ray ray = Camera.main.ScreenPointToRay(info.endPoint);
                 RaycastHit hit;
                 if (Physics.Raycast(ray, out hit, 500, tableMask))
-                {                    
-                    currantCards[info.index].Drag(new MoveInfo(hit, 2));
+                {
+                    ICardHolder holder = hit.transform.GetComponentInParent<ICardHolder>();
+                    if (holder != null)
+                    {
+                        currantCards[info.index].Drag(holder, new MoveInfo(hit, 2));
+                    }
+                    else
+                    {
+                        currantCards[info.index].Drag(new MoveInfo(hit, 2));
+                    }
                 }
             }
         }

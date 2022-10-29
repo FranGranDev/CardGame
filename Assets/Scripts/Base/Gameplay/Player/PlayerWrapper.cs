@@ -10,7 +10,7 @@ namespace Cards
         {
             Name = name;
             Hands = hands;
-            Hands.Initilize();
+            Hands.Initilize(this);
         }
 
         public string Name { get; private set; }

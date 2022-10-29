@@ -11,9 +11,12 @@ namespace Cards
     {
         public abstract bool Visible { get; set; }
         public abstract bool Takable { get; set; }
+        public abstract int Comparator { get; }
+        public abstract CardInfo Info { get; protected set; }
         public Transform Body { get => transform; }
         public ICardAnimation Animations { get; protected set; }
         public PlayerWrapper Owner { get; set; }
+
 
         #region Callbacks
 
@@ -32,9 +35,11 @@ namespace Cards
             Animations = GetComponent<ICardAnimation>();
         }
 
+        public abstract void Return();
         public abstract void Interact(MoveInfo info);
         public abstract void Take(MoveInfo info);
         public abstract void Drop(ICardHolder holder, MoveInfo info);
+        public abstract void Drag(ICardHolder holder, MoveInfo info);
         public abstract void Drag(MoveInfo info);
 
         public abstract void Accept(ICardVisitor visitor, object data = null);
@@ -46,7 +51,11 @@ namespace Cards
         }
         public void FlyTo(Vector3 position, Quaternion rotation, float time, ICardAnimation.Order order, Action onDone = null)
         {
-            Animations.FlyTo(position, rotation, time, order, onDone);
+            Animations.FlyToHand(position, rotation, time, order, onDone);
+        }
+        public void DiscardMove(Vector3 position, Quaternion rotation, float time, ICardAnimation.Order order, Action onDone = null)
+        {
+            Animations.DiscardMove(position, rotation, time, order, onDone);
         }
     }
 }

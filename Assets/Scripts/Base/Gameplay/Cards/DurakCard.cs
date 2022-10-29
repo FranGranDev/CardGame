@@ -7,18 +7,17 @@ namespace Cards
 {
     public class DurakCard : Card
     {
-        [Header("Settings")]
-        [SerializeField] private int index;
-        [SerializeField] private SuitTypes suit;
-
         [Header("Components")]
         [SerializeField] private List<TextMeshPro> numbers;
         [SerializeField] private List<SpriteRenderer> icons;
+        [Header("State")]
+        [SerializeField] private SuitTypes suit;
+        [SerializeField] private int index;
+
 
         private bool visible = true;
+        private CardInfo cardInfo;
 
-        public int Index => index;
-        public SuitTypes Suit => suit;
 
         public override bool Takable
         {
@@ -33,6 +32,26 @@ namespace Cards
                 visible = value;
             }
         }
+        public override CardInfo Info
+        {
+            get => cardInfo;
+            protected set
+            {
+                index = value.index;
+                suit = (SuitTypes)value.suit;
+
+                cardInfo = value;
+            }
+        }
+        public override int Comparator
+        {
+            get
+            {
+                return ((int)suit + 1) * 10 + index;
+            }
+        }
+
+
 
 
         public override void Initilize()
@@ -41,10 +60,7 @@ namespace Cards
         }
         public void Initilize(int index, SuitTypes suit)
         {
-
-
-            this.index = index;
-            this.suit = suit;
+            Info = new CardInfo(index, (int)suit);
         }
         public void SetVisual(string name, Sprite suit, Sprite image, Material material)
         {
@@ -59,6 +75,10 @@ namespace Cards
         }
 
 
+        public override void Return()
+        {
+            
+        }
         public override void Interact(MoveInfo info)
         {
            
@@ -69,10 +89,11 @@ namespace Cards
         }
         public override void Drop(ICardHolder holder, MoveInfo info)
         {
-            transform.position = info.position;
-            transform.up = info.normal;
-
             holder.Drop(this, new DropCardData { Sender = DropCardData.SenderTypes.Self});
+        }
+        public override void Drag(ICardHolder holder, MoveInfo info)
+        {
+            holder.Drag(this, info);
         }
         public override void Drag(MoveInfo info)
         {

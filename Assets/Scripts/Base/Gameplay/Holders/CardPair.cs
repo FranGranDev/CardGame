@@ -4,7 +4,8 @@
     {
         public CardPair(Card first, ICardComparator comparator)
         {
-            Defender = first;
+            Attacker = first;
+            Attacker.Takable = false;
             this.comparator = comparator;
 
             Done = false;
@@ -12,17 +13,24 @@
 
         private ICardComparator comparator;
 
-        public Card Defender { get; private set; }
+        public bool Done { get; private set; }
         public Card Attacker { get; private set; }
+        public Card Defender { get; private set; }
 
 
         public bool TryBeat(Card other)
         {
-            Attacker = other;
+            if (Done)
+                return false;
 
-            Done = comparator.Compare(Defender, Attacker);
+            Done = comparator.CanBeat(other, Attacker);
+            if(Done)
+            {
+                Defender = other;
+                Defender.Takable = false;
+            }
             return Done;
         }
-        public bool Done { get; private set; }
+
     }
 }

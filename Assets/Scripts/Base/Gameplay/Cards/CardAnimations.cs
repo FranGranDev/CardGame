@@ -11,9 +11,16 @@ namespace Cards
     {
         [Header("Settings")]
         [SerializeField] private Transform target;
+        [Header("Move Animation")]
+        [SerializeField] private AnimationCurve moveEase;
         [Header("Fly Animation")]
-        [SerializeField] private float topHeight;
+        [SerializeField] private AnimationCurve flyEase;
+        [SerializeField] private float flyTopHeight;
         [SerializeField] private AnimationCurve flyCurve;
+        [Header("Discard Animation")]
+        [SerializeField] private AnimationCurve discardEase;
+        [SerializeField] private float discardTopHeight;
+        [SerializeField] private AnimationCurve discardCurve;
 
         private Coroutine currantAnimation;
 
@@ -47,11 +54,11 @@ namespace Cards
         }
 
 
-        public void FlyTo(Vector3 position, Quaternion rotation, float time, ICardAnimation.Order order, Action callback = null)
+        public void FlyToHand(Vector3 position, Quaternion rotation, float time, ICardAnimation.Order order, Action callback = null)
         {
-            CacheAnimation(order, FlyToCour(position, rotation, time, callback), nameof(FlyTo), callback);
+            CacheAnimation(order, FlyToHandCour(position, rotation, time, callback), nameof(FlyToHand), callback);
         }
-        private IEnumerator FlyToCour(Vector3 position, Quaternion rotation, float time, Action callback = null)
+        private IEnumerator FlyToHandCour(Vector3 position, Quaternion rotation, float time, Action callback = null)
         {
             var wait = new WaitForFixedUpdate();
             float currantTime = 0;
@@ -60,10 +67,10 @@ namespace Cards
 
             while(currantTime < time)
             {
-                float ratio = currantTime / time;
+                float ratio = flyEase.Evaluate(currantTime / time);
 
                 Vector3 currantPosition = Vector3.Lerp(startPosition, position, ratio);
-                Vector3 height = Vector3.up * flyCurve.Evaluate(ratio) * topHeight;
+                Vector3 height = Vector3.up * flyCurve.Evaluate(ratio) * flyTopHeight;
                 Quaternion currantRotation = Quaternion.Lerp(startRotation, rotation, ratio * 2);
 
                 target.transform.position = currantPosition + height;
@@ -73,12 +80,52 @@ namespace Cards
                 currantTime += Time.fixedDeltaTime;
                 yield return wait;
             }
+
+            target.transform.position = position;
+            target.transform.rotation = rotation;
             currantAnimation = null;
 
 
             callback?.Invoke();
             yield break;
         }
+
+        public void DiscardMove(Vector3 position, Quaternion rotation, float time, ICardAnimation.Order order, Action callback = null)
+        {
+            CacheAnimation(order, DiscardMoveCour(position, rotation, time, callback), nameof(DiscardMove), callback);
+        }
+        private IEnumerator DiscardMoveCour(Vector3 position, Quaternion rotation, float time, Action callback = null)
+        {
+            var wait = new WaitForFixedUpdate();
+            float currantTime = 0;
+            Vector3 startPosition = target.position;
+            Quaternion startRotation = target.rotation;
+
+            while (currantTime < time)
+            {
+                float ratio = discardEase.Evaluate(currantTime / time);
+
+                Vector3 currantPosition = Vector3.Lerp(startPosition, position, ratio);
+                Vector3 height = Vector3.up * discardCurve.Evaluate(ratio) * discardTopHeight;
+                Quaternion currantRotation = Quaternion.Lerp(startRotation, rotation, ratio);
+
+                target.transform.position = currantPosition + height;
+                target.transform.rotation = currantRotation;
+
+
+                currantTime += Time.fixedDeltaTime;
+                yield return wait;
+            }
+
+            target.transform.position = position;
+            target.transform.rotation = rotation;
+            currantAnimation = null;
+
+
+            callback?.Invoke();
+            yield break;
+        }
+
 
         public void MoveTo(Vector3 position, Quaternion rotation, float time, ICardAnimation.Order order, Action callback = null)
         {
@@ -91,20 +138,23 @@ namespace Cards
             Vector3 startPosition = target.position;
             Quaternion startRotation = target.rotation;
 
+
             while (currantTime < time)
             {
-                float ratio = currantTime / time;
+                float ratio = moveEase.Evaluate(currantTime / time);
 
                 Vector3 currantPosition = Vector3.Lerp(startPosition, position, ratio);
                 Quaternion currantRotation = Quaternion.Lerp(startRotation, rotation, ratio);
 
-                target.transform.position = currantPosition;
-                target.transform.rotation = currantRotation;
+                target.position = currantPosition;
+                target.rotation = currantRotation;
 
 
                 currantTime += Time.fixedDeltaTime;
                 yield return wait;
             }
+            target.position = position;
+            target.rotation = rotation;
             currantAnimation = null;
 
             callback?.Invoke();

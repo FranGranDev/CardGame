@@ -5,7 +5,8 @@ namespace TouchInput
 {
     public class TouchInput : MonoBehaviour, ITouchMovement
     {
-        private const float MIN_DST_FOR_DRAG = 20;
+        private const float MIN_DST_FOR_DRAG = 10;
+        private const float MIN_TIME_FOR_DRAG = 0.25f;
 
         [SerializeField] private StateTypes state;
 
@@ -29,7 +30,9 @@ namespace TouchInput
             {
                 OnEndTap(Input.mousePosition);
             }
-
+        }
+        private void InputExecute()
+        {
             if (touched)
             {
                 switch (state)
@@ -43,12 +46,15 @@ namespace TouchInput
 
         private IEnumerator WaitForDragSelect()
         {
-            while ((startTapPosition - Input.mousePosition).magnitude < MIN_DST_FOR_DRAG)
+            float time = 0;
+
+            while ((startTapPosition - Input.mousePosition).magnitude < MIN_DST_FOR_DRAG && time < MIN_TIME_FOR_DRAG)
             {
                 if (!touched)
                 {
                     yield break;
                 }
+                time += Time.fixedDeltaTime;
                 yield return new WaitForFixedUpdate();
             }
 
@@ -84,7 +90,10 @@ namespace TouchInput
         {
             MouseInput();
         }
-
+        private void FixedUpdate()
+        {
+            InputExecute();
+        }
 
     }
 }

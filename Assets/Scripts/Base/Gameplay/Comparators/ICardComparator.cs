@@ -2,6 +2,7 @@ namespace Cards
 {
     public interface ICardComparator
     {
-        public bool Compare(Card defender, Card attacker);
+        public bool CanBeat(Card defender, Card attacker);
+        public bool CanPut(Card attacker, CardPair pair);
     }
 }

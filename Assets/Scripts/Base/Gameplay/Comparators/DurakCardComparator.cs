@@ -13,27 +13,22 @@ namespace Cards
 
         private DurakCard.SuitTypes trump;
 
-        public bool Compare(Card card1, Card card2)
+        public bool CanBeat(Card defender, Card attacker)
         {
-            try
+            if (defender.Info.suit == attacker.Info.suit)
             {
-                DurakCard defender = card1 as DurakCard;
-                DurakCard attacker = card2 as DurakCard;
-
-                if(attacker.Suit == defender.Suit)
-                {
-                    return attacker.Index > defender.Index;
-                }
-                else
-                {
-                    return attacker.Suit == trump;
-                }
+                return defender.Info.index > attacker.Info.index;
             }
-            catch
+            else
             {
-                Debug.LogError("Cards is not a durak type!");
+                return (DurakCard.SuitTypes)defender.Info.suit == trump;
             }
-            return false;
+        }
+        public bool CanPut(Card attacker, CardPair pair)
+        {
+            bool canPut = pair.Attacker.Info.index == attacker.Info.index;
+            canPut = canPut || pair.Done && pair.Attacker.Info.index == attacker.Info.index;
+            return canPut;
         }
     }
 }

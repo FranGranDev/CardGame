@@ -1,8 +1,8 @@
-using System.Collections;
+using Cards;
+using Cards.Data;
 using System.Collections.Generic;
 using UnityEngine;
-using Cards.Data;
-using Cards;
+
 
 namespace Managament
 {
@@ -14,7 +14,6 @@ namespace Managament
             Main = this;
         }
 
-
         #region Links
 
         [Header("Links")]
@@ -23,14 +22,35 @@ namespace Managament
         [SerializeField] private Hand player;
         [SerializeField] private Hand enemy;
         [SerializeField] private Deck deck;
+        [SerializeField] private DiscardPile discardPile;
         [SerializeField] private CardFactory cardFactory;
 
         #endregion
 
+        #region States
+
+        private List<PlayerWrapper> players;
+
+        #endregion
 
         private void Start()
         {
-            table.Initilize();
+            InitilizeGame();
+        }
+
+        private void InitilizeGame()
+        {
+            DurakCard.SuitTypes trump = DurakCard.SuitTypes.Hearts;
+            players = new List<PlayerWrapper>()
+            {
+                new PlayerWrapper("Player", player),
+                new PlayerWrapper("Enemy", enemy),
+            };
+
+            table.Initilize(players, deck, discardPile, new DurakCardComparator(trump));
+            deck.Initilize(players, cardFactory, trump);
+
+            table.StartGame();
         }
     }
 }

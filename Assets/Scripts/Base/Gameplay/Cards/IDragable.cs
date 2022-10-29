@@ -12,9 +12,12 @@ namespace Cards
         public bool Takable { get; set; }
         public Transform Body { get; }
 
+
+        public void Return();
         public void Interact(MoveInfo info);
         public void Take(MoveInfo info);
         public void Drop(ICardHolder holder, MoveInfo info);
+        public void Drag(ICardHolder holder, MoveInfo info);
         public void Drag(MoveInfo info);
 
         public void Accept(ICardVisitor visitor, object data = null);

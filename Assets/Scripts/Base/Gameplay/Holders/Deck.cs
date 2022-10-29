@@ -10,20 +10,18 @@ namespace Cards
     {
         private const int MAX_CARD_INDEX = 9;
 
-
-        [Header("Links")]
-        [SerializeField] private CardFactory cardFactory;
         [Header("Components")]
         [SerializeField] private Transform cardPlace;
         [SerializeField] private Transform trumpPlace;
+
 
         private DurakCard.SuitTypes trump;
         private List<CardInfo> cardsData;
         private Dictionary<CardInfo, Card> cardsObjects;
 
-
-        public List<Hand> players;//test;
-
+        private List<PlayerWrapper> players;
+        private CardFactory cardFactory;
+        private Coroutine dealtCoroutine;
 
         public CardInfo TopCard
         {
@@ -42,12 +40,14 @@ namespace Cards
         }
 
 
-        private void Start()
+        public void Initilize(List<PlayerWrapper> players, CardFactory cardFactory, DurakCard.SuitTypes trump)
         {
+            this.players = players;
+            this.cardFactory = cardFactory;
+            this.trump = trump;
+
             GenerateDeckData();
             BuildDeck();
-
-            this.Delayed(() => StartCoroutine(DealtCards()), 1);            
         }
 
         public void GenerateDeckData()
@@ -67,7 +67,7 @@ namespace Cards
                 random.Shuffle(cardsData);
             }
 
-            CardInfo trumpInfo = cardsData.GetRandom();
+            CardInfo trumpInfo = cardsData.Where(x => x.suit == (int)trump).ToList().GetRandom();
             int index = cardsData.IndexOf(trumpInfo);
             cardsData[index] = cardsData[0];
             cardsData[0] = trumpInfo;
@@ -77,7 +77,6 @@ namespace Cards
             cardsData.Clear();
             cardsData.AddRange(info);
         }
-
         public void BuildDeck()
         {
             cardsObjects = new Dictionary<CardInfo, Card>();
@@ -101,26 +100,32 @@ namespace Cards
             trump.transform.localPosition = Vector3.zero;
             trump.transform.localRotation = Quaternion.identity;
         }
-        public void UpdateDeck()
-        {
 
+        public void DealtCards()
+        {
+            if(dealtCoroutine != null)
+            {
+                StopCoroutine(dealtCoroutine);
+            }
+            dealtCoroutine = StartCoroutine(DealtCardsCour());
         }
-        public IEnumerator DealtCards()
+        public IEnumerator DealtCardsCour()
         {
             bool done = false;
             while(cardsData.Count > 0 && !done)
             {
-                foreach (Hand player in players)
+                foreach (PlayerWrapper player in players)
                 {
-                    if(player.CardsCount < 6)
+                    if(player.Hands.CardsCount < 6)
                     {
-                        SendCard(TopCard, player);
+                        SendCard(TopCard, player.Hands);
                     }
+                   
 
-                    yield return new WaitForSeconds(0.33f);
+                    yield return new WaitForSeconds(0.2f);
                 }
 
-                done = players.Count(x => x.CardsCount < 6) == 0;
+                done = players.Count(x => x.Hands.CardsCount < 6) == 0;
             }
 
             yield break;

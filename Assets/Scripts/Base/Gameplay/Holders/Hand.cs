@@ -22,15 +22,16 @@ namespace Cards
 
 
         private List<Card> cards = new List<Card>();
+        private PlayerWrapper player;
 
         public int CardsCount => cards.Count;
         public List<Card> Cards => cards;
 
 
         #region Initilize
-        public void Initilize()
+        public void Initilize(PlayerWrapper player)
         {
-
+            this.player = player;
         }
 
 
@@ -65,18 +66,26 @@ namespace Cards
                             SortCards();
                         });
                         break;
-                    case DropCardData.SenderTypes.Others:
-
-                        break;
                 }
 
             }
             catch{ }
         }
 
+        public void Drag(IDragable card, MoveInfo info)
+        {
+            card.Body.position = Vector3.Lerp(card.Body.position, info.position, 0.5f);
+            float t = Mathf.InverseLerp(leftPoint.position.x, rightPoint.position.x, info.position.x);
+
+            Quaternion rotation = Quaternion.LookRotation(Vector3.Lerp(leftPoint.forward, rightPoint.forward, t), cardPlace.up);
+
+            card.Body.rotation = Quaternion.Lerp(card.Body.rotation, rotation, 0.5f);
+        }
+
         private void SortCards()
-        {   
-            cards.OrderBy(x => x.transform.position.x);
+        {
+            //cards = cards.OrderBy(x => x.Comparator).ToList();
+            //cards = cards.OrderBy(x => x.Body.position.x).ToList();
 
             int i = 0;
             foreach (Card card in cards)
@@ -113,11 +122,12 @@ namespace Cards
         {
             if(cards.Contains(card))
             {
-                Debug.LogError($"Card already exists", card.Body);
+                Debug.LogError($"Card already exists", card.gameObject);
                 return;
             }
 
             cards.Add(card);
+            card.Owner = player;
             card.Body.transform.parent = cardPlace;
             card.OnTaken += RemoveCard;
         }
