@@ -116,24 +116,25 @@ namespace Cards
         }
         public IEnumerator DealtCardsCour()
         {
-            yield return new WaitForSeconds(1.5f);
+            yield return new WaitForSeconds(1f);
+            int cardCount = 12;
 
             bool done = false;
             while(cardsData.Count > 0 && !done)
             {
                 foreach (PlayerWrapper player in players)
                 {
-                    if(player.Hands.CardsCount < 6)
+                    if(player.Hands.CardsCount < cardCount)
                     {
                         OnSendCard?.Invoke(TopCard, player);
 
                         SendCard(TopCard, player);
                     }
 
-                    yield return new WaitForSeconds(0.2f);
+                    yield return new WaitForSeconds(0.15f);
                 }
 
-                done = players.Count(x => x.Hands.CardsCount < 6) == 0;
+                done = players.Count(x => x.Hands.CardsCount < cardCount) == 0;
             }
 
             yield break;

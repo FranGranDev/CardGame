@@ -27,7 +27,7 @@ namespace Cards
         public bool CanPut(Card attacker, CardPair pair)
         {
             bool canPut = pair.Attacker.Info.index == attacker.Info.index;
-            canPut = canPut || pair.Done && pair.Attacker.Info.index == attacker.Info.index;
+            canPut = canPut || pair.Done && pair.Defender.Info.index == attacker.Info.index;
             return canPut;
         }
     }

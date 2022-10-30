@@ -6,13 +6,12 @@ namespace Cards
 {
     public class Table : MonoBehaviour, ICardHolder, ICardVisitor
     {
-        [Header("Attack Placement")]
-        [SerializeField] private float cardAttackMaxRotationY;
-        [SerializeField] private float cardAttackPositionOffset;
-        [Header("Defend Placement")]
-        [SerializeField] private float cardBeatRotationY;
-        [SerializeField] private float cardBeatRotationOffset;
-        [SerializeField] private float cardBeatPositionOffset;
+        [Header("Placement")]
+        [SerializeField] private Vector2 PlaceAttackRotationOffset;
+        [SerializeField] private Vector2 PlaceDefendRotationOffset;
+        [Space]
+        [SerializeField] private Vector2 PlacePositionOffsetX;
+        [SerializeField] private Vector2 PlacePositionOffsetY;
         [Header("Components")]
         [SerializeField] private Transform pointsPlace;
 
@@ -57,6 +56,26 @@ namespace Cards
             get => players[currantMove + 1];
         }
 
+        public float AvgPlaceAttackRotation
+        {
+            get => 0;
+            //get => (PlaceAttackRotationOffset.x + PlaceAttackRotationOffset.y) / 2;
+        }
+        public float AvgPlaceDefendRotation
+        {
+            get => (PlaceDefendRotationOffset.x + PlaceDefendRotationOffset.y) / 2;
+        }
+
+        public Vector3 AvgPlaceAttackPosition
+        {
+            get => new Vector3(-(PlacePositionOffsetX.x + PlacePositionOffsetX.y) / 2, 0, (PlacePositionOffsetY.x + PlacePositionOffsetY.y));
+        }
+        public Vector3 AvgPlaceDefendPosition
+        {
+            get => new Vector3((PlacePositionOffsetX.x + PlacePositionOffsetX.y) / 2, 0, -(PlacePositionOffsetY.x + PlacePositionOffsetY.y));
+        }
+
+
         #region Initilize
 
         public void Initilize(List<PlayerWrapper> players, Deck deck, DiscardPile discardPile, ICardComparator comparator)
@@ -75,10 +94,10 @@ namespace Cards
             pairPoints = new Dictionary<Vector2Int, PairPoint>();
             for (int y = 0; y < 3; y++)
             {
-                for (int x = 0; x < 4; x++)
+                for (int x = 0; x < 3; x++)
                 {
                     GameObject point = new GameObject($"{x}:{y}");
-                    point.transform.position = new Vector3(x * 12 - 18, 0.1f, y * 18 - 18);
+                    point.transform.position = new Vector3(x * 18 - 18, 0.1f, y * 18 - 18);
                     point.transform.parent = pointsPlace;
 
                     Vector2Int key = new Vector2Int(x, y);
@@ -109,15 +128,20 @@ namespace Cards
         {
             PairPoint min = GetNearPoint(info.position);
 
-            Vector3 position = Vector3.Lerp(info.position, min.position, 0.75f);
+            Vector3 position = Vector3.Lerp(info.position, min.Position, 0.75f);
             position.y = min.position.y + 0.5f;
 
             Quaternion rotation = Quaternion.identity;
 
-            if(min.Cards != null)
+            if (min.Pair != null && !min.Pair.Done)
             {
-                rotation = Quaternion.Euler(0, cardBeatRotationY, 0);
-                position += new Vector3(0.5f, 0.5f, -0.5f);
+                rotation = Quaternion.Euler(0, AvgPlaceDefendRotation, 0);
+                position += AvgPlaceDefendPosition;
+            }
+            else
+            {
+                rotation = Quaternion.Euler(0, AvgPlaceAttackRotation, 0);
+                position += AvgPlaceAttackPosition;
             }
 
             card.Body.position = Vector3.Lerp(card.Body.position, position, 0.3f);
@@ -150,7 +174,7 @@ namespace Cards
                 bool firstMove = currantPairs.Count == 0;
                 bool canPut = currantPairs.Count(x => comparator.CanPut(card, x)) > 0;
 
-                if(point.Cards == null && (firstMove || canPut))
+                if(point.CanPutAttack && (firstMove || canPut))
                 {
                     PlaceAttackCard(point, card);
                 }
@@ -163,7 +187,7 @@ namespace Cards
             {
                 PairPoint point = GetNearPoint(card.Body.position);
 
-                if (point.Cards != null && point.Cards.TryBeat(card))
+                if (point.CanPutDefend && point.Pair.TryBeat(card))
                 {
                     PlaceDefendCard(point, card);
                 }
@@ -178,23 +202,23 @@ namespace Cards
             }
         }
 
-        private CardPair PlaceAttackCard(PairPoint point, Card card)
+        private void PlaceAttackCard(PairPoint point, Card card)
         {
-            point.Cards = new CardPair(card, comparator);
-            currantPairs.Add(point.Cards);
+            CardPair pair = new CardPair(card, comparator);
+            point.CreateNewPair(pair);
+            currantPairs.Add(pair);
 
+            Vector3 offset = new Vector3(-Random.Range(PlacePositionOffsetX.x, PlacePositionOffsetX.y), 0f, Random.Range(PlacePositionOffsetY.x, PlacePositionOffsetY.y));
+            Vector3 position = point.Position + offset;
+            Quaternion rotation = Quaternion.Euler(0, Random.Range(PlaceAttackRotationOffset.x, PlaceAttackRotationOffset.y), 0);
 
-            Vector3 position = point.position + new Vector3(-0.5f, 0, 0.5f) * (1 + Random.Range(-cardAttackPositionOffset, cardAttackPositionOffset) / 2);
-            Quaternion rotation = Quaternion.Euler(0, cardAttackMaxRotationY * (Random.Range(0, 1f)), 0);
             card.MoveTo(position, rotation, 0.25f, ICardAnimation.Order.Override);
-
-            return point.Cards;
         }
         private void PlaceDefendCard(PairPoint point, Card card)
         {
-            Vector3 position = point.position + new Vector3(0.5f, 0, -0.5f) * (1 - Random.Range(-cardBeatPositionOffset, cardBeatPositionOffset) / 2);
-            position.y = 0.2f;
-            Quaternion rotation = Quaternion.Euler(0, cardBeatRotationY * (1 + Random.Range(0, cardBeatRotationOffset)), 0);
+            Vector3 offset = new Vector3(Random.Range(PlacePositionOffsetX.x, PlacePositionOffsetX.y), 0f, -Random.Range(PlacePositionOffsetY.x, PlacePositionOffsetY.y));
+            Vector3 position = point.Position + offset;
+            Quaternion rotation = Quaternion.Euler(0, Random.Range(PlaceDefendRotationOffset.x, PlaceDefendRotationOffset.y), 0);
 
             card.MoveTo(position, rotation, 0.25f, ICardAnimation.Order.Override);
         }

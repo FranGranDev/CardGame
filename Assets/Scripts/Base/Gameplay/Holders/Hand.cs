@@ -55,7 +55,7 @@ namespace Cards
                 {
                     case DropCardData.SenderTypes.Self:
                         card.Takable = true;
-                        SortCards();
+                        SortCards(ICardAnimation.Order.Override);
                         break;
                     case DropCardData.SenderTypes.Dect:
                         card.Takable = false;
@@ -63,7 +63,7 @@ namespace Cards
                         card.FlyTo(CardPosition(index), CardRotation(index), 1f, ICardAnimation.Order.Override, () =>
                         {
                             card.Takable = true;
-                            SortCards();
+                            SortCards(ICardAnimation.Order.IfNotPlaying);
                         });
                         break;
                 }
@@ -82,10 +82,10 @@ namespace Cards
             card.Body.rotation = Quaternion.Lerp(card.Body.rotation, rotation, 0.5f);
         }
 
-        private void SortCards()
+        private void SortCards(ICardAnimation.Order order = ICardAnimation.Order.IfNotPlaying)
         {
             //cards = cards.OrderBy(x => x.Comparator).ToList();
-            //cards = cards.OrderBy(x => x.Body.position.x).ToList();
+            cards = cards.OrderBy(x => x.Body.localPosition.x).ToList();
 
             int i = 0;
             foreach (Card card in cards)
@@ -93,7 +93,8 @@ namespace Cards
                 Vector3 position = CardPosition(i);
                 Quaternion rotation = CardRotation(i);
 
-                card.MoveTo(position, rotation, 0.25f, ICardAnimation.Order.IfNotPlaying);
+                card.Takable = false;
+                card.MoveTo(position, rotation, 0.25f, order, () => card.Takable = true);
 
                 i++;
             }
@@ -144,8 +145,8 @@ namespace Cards
                 cards.Remove((Card)card);
                 card.Body.transform.parent = null;
                 card.OnTaken -= RemoveCard;
-
-                SortCards();
+                
+                SortCards(ICardAnimation.Order.Override);
             }
             catch
             {
