@@ -6,14 +6,14 @@ namespace Cards
 {
     public class PlayerWrapper
     {
-        public PlayerWrapper(string name, Hand hands)
+        public PlayerWrapper(int id, Hand hands)
         {
-            Name = name;
+            Id = id;
             Hands = hands;
             Hands.Initilize(this);
         }
 
-        public string Name { get; private set; }
+        public int Id { get; private set; }
         public Hand Hands { get; private set; }
     }
 }

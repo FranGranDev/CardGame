@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using Cards.Data;
+using UI;
 
 namespace Cards
 {
@@ -40,17 +41,17 @@ namespace Cards
         }
 
 
+        public System.Action<CardInfo, PlayerWrapper> OnSendCard { get; set; }
+
+
         public void Initilize(List<PlayerWrapper> players, CardFactory cardFactory, DurakCard.SuitTypes trump)
         {
             this.players = players;
             this.cardFactory = cardFactory;
             this.trump = trump;
-
-            GenerateDeckData();
-            BuildDeck();
         }
 
-        public void GenerateDeckData()
+        public List<CardInfo> GenerateDeckData()
         {
             cardsData = new List<CardInfo>();
             for(int i = 0; i < MAX_CARD_INDEX; i++)
@@ -71,11 +72,15 @@ namespace Cards
             int index = cardsData.IndexOf(trumpInfo);
             cardsData[index] = cardsData[0];
             cardsData[0] = trumpInfo;
+
+            return cardsData;
         }
         public void SetDeckData(List<CardInfo> info)
         {
-            cardsData.Clear();
+            cardsData = new List<CardInfo>();
             cardsData.AddRange(info);
+
+            BuildDeck();
         }
         public void BuildDeck()
         {
@@ -111,6 +116,8 @@ namespace Cards
         }
         public IEnumerator DealtCardsCour()
         {
+            yield return new WaitForSeconds(1.5f);
+
             bool done = false;
             while(cardsData.Count > 0 && !done)
             {
@@ -118,9 +125,10 @@ namespace Cards
                 {
                     if(player.Hands.CardsCount < 6)
                     {
-                        SendCard(TopCard, player.Hands);
+                        OnSendCard?.Invoke(TopCard, player);
+
+                        SendCard(TopCard, player);
                     }
-                   
 
                     yield return new WaitForSeconds(0.2f);
                 }
@@ -131,11 +139,11 @@ namespace Cards
             yield break;
         }
 
-        private void SendCard(CardInfo info, ICardHolder holder)
+        public void SendCard(CardInfo info, PlayerWrapper player)
         {
-            if(cardsObjects.ContainsKey(info))
+            if (cardsObjects.ContainsKey(info))
             {
-                holder.Drop(cardsObjects[info], new DropCardData{ Sender = DropCardData.SenderTypes.Dect });
+                player.Hands.Drop(cardsObjects[info], new DropCardData{ Sender = DropCardData.SenderTypes.Dect });
 
                 cardsData.Remove(info);
                 cardsObjects.Remove(info);

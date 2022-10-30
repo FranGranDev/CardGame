@@ -6,7 +6,10 @@ namespace Cards
 {
     public class Table : MonoBehaviour, ICardHolder, ICardVisitor
     {
-        [Header("Placement Settings")]
+        [Header("Attack Placement")]
+        [SerializeField] private float cardAttackMaxRotationY;
+        [SerializeField] private float cardAttackPositionOffset;
+        [Header("Defend Placement")]
         [SerializeField] private float cardBeatRotationY;
         [SerializeField] private float cardBeatRotationOffset;
         [SerializeField] private float cardBeatPositionOffset;
@@ -180,11 +183,9 @@ namespace Cards
             point.Cards = new CardPair(card, comparator);
             currantPairs.Add(point.Cards);
 
-            Vector3 random = Random.onUnitSphere;
-            random.y = 0f;
 
-            Vector3 position = point.position + random * (1 - Random.Range(-cardBeatPositionOffset, cardBeatPositionOffset) / 2);
-            Quaternion rotation = Quaternion.Euler(0, cardBeatRotationY * Random.Range(-cardBeatRotationOffset, 0), 0);
+            Vector3 position = point.position + new Vector3(-0.5f, 0, 0.5f) * (1 + Random.Range(-cardAttackPositionOffset, cardAttackPositionOffset) / 2);
+            Quaternion rotation = Quaternion.Euler(0, cardAttackMaxRotationY * (Random.Range(0, 1f)), 0);
             card.MoveTo(position, rotation, 0.25f, ICardAnimation.Order.Override);
 
             return point.Cards;

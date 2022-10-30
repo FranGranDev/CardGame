@@ -42,6 +42,8 @@ MonoBehaviour:
   - SetParent
   - SetPlayerName
   - UpdatePlayerState
+  - DoDeckSendCard
+  - DoGenerateDeck
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

@@ -17,6 +17,7 @@ namespace Managament
         #region Links
 
         [Header("Links")]
+        [SerializeField] private HostController hostController;
         [SerializeField] private Table table;
         [SerializeField] private PlayerCamera playerCamera;
         [SerializeField] private Hand player;
@@ -40,17 +41,22 @@ namespace Managament
 
         private void InitilizeGame()
         {
-            DurakCard.SuitTypes trump = DurakCard.SuitTypes.Hearts;
-            players = new List<PlayerWrapper>()
+            players = hostController.Initilize(table, deck, player, enemy);
+
+            bool isOffline = players.Count < 2;
+            if (isOffline)
             {
-                new PlayerWrapper("Player", player),
-                new PlayerWrapper("Enemy", enemy),
-            };
+                players.Add(new PlayerWrapper(404, enemy));
+                Debug.LogWarning("Test game due to 1 player");
+            }
+
+            DurakCard.SuitTypes trump = DurakCard.SuitTypes.Hearts;
 
             table.Initilize(players, deck, discardPile, new DurakCardComparator(trump));
             deck.Initilize(players, cardFactory, trump);
 
-            table.StartGame();
+
+            hostController.StartGame(isOffline);
         }
     }
 }

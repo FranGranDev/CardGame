@@ -20,5 +20,19 @@
         public readonly int index;
         public readonly int suit;
         public readonly int skin;
+
+        public override bool Equals(object obj)
+        {
+            if(obj is CardInfo)
+            {
+                CardInfo other = (CardInfo)obj;
+                return other.index == index && other.suit == suit;
+            }
+            return base.Equals(obj);
+        }
+        public override int GetHashCode()
+        {
+            return 0;
+        }
     }
 }
