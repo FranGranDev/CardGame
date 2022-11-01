@@ -45,17 +45,9 @@ namespace Cards
         public abstract void Accept(ICardVisitor visitor, object data = null);
 
 
-        public void MoveTo(Vector3 position, Quaternion rotation, float time, ICardAnimation.Order order, Action onDone = null)
+        public void DoMove(ICardAnimation.Types type, Vector3 position, Quaternion rotation, float time, ICardAnimation.Order order, Action onDone = null)
         {
-            Animations.MoveTo(position, rotation, time, order, onDone);
-        }
-        public void FlyTo(Vector3 position, Quaternion rotation, float time, ICardAnimation.Order order, Action onDone = null)
-        {
-            Animations.FlyToHand(position, rotation, time, order, onDone);
-        }
-        public void DiscardMove(Vector3 position, Quaternion rotation, float time, ICardAnimation.Order order, Action onDone = null)
-        {
-            Animations.DiscardMove(position, rotation, time, order, onDone);
+            Animations.DoMove(type, position, rotation, time, order, onDone);
         }
     }
 }

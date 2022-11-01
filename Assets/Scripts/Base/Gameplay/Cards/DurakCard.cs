@@ -89,6 +89,9 @@ namespace Cards
         }
         public override void Drop(ICardHolder holder, MoveInfo info)
         {
+            Debug.Log("OnDropped: " + cardInfo.index, gameObject);
+            OnDropped?.Invoke(this);
+
             holder.Drop(this, new DropCardData { Sender = DropCardData.SenderTypes.Self});
         }
         public override void Drag(ICardHolder holder, MoveInfo info)

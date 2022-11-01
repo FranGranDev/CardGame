@@ -3,8 +3,7 @@
     "rootNamespace": "Cards",
     "references": [
         "GUID:6055be8ebefd69e48b49212b09b47b2f",
-        "GUID:06cd664812979a647a6b5adf745cfdde",
-        "GUID:2e43d0fd8b290cb4da462f7e76bf7d31"
+        "GUID:06cd664812979a647a6b5adf745cfdde"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

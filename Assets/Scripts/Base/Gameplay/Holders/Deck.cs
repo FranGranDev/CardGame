@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using Cards.Data;
-using UI;
+
 
 namespace Cards
 {
@@ -41,6 +41,7 @@ namespace Cards
         }
 
 
+        public System.Action<List<CardInfo>> OnDeckGenerated { get; set; }
         public System.Action<CardInfo, PlayerWrapper> OnSendCard { get; set; }
 
 
@@ -73,6 +74,7 @@ namespace Cards
             cardsData[index] = cardsData[0];
             cardsData[0] = trumpInfo;
 
+            OnDeckGenerated?.Invoke(cardsData);
             return cardsData;
         }
         public void SetDeckData(List<CardInfo> info)
@@ -116,15 +118,15 @@ namespace Cards
         }
         public IEnumerator DealtCardsCour()
         {
-            yield return new WaitForSeconds(1f);
-            int cardCount = 12;
+            yield return new WaitForSeconds(0.25f);
+            int targetCount = 6;
 
             bool done = false;
             while(cardsData.Count > 0 && !done)
             {
                 foreach (PlayerWrapper player in players)
                 {
-                    if(player.Hands.CardsCount < cardCount)
+                    if(player.Hands.CardsCount < targetCount)
                     {
                         OnSendCard?.Invoke(TopCard, player);
 
@@ -134,7 +136,7 @@ namespace Cards
                     yield return new WaitForSeconds(0.15f);
                 }
 
-                done = players.Count(x => x.Hands.CardsCount < cardCount) == 0;
+                done = players.Count(x => x.Hands.CardsCount < targetCount) == 0;
             }
 
             yield break;

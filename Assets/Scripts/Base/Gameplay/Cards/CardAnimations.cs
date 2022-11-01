@@ -9,6 +9,9 @@ namespace Cards
 {
     public class CardAnimations : MonoBehaviour, ICardAnimation
     {
+        public delegate void BaseAnimation(Vector3 position, Quaternion rotation, float time, ICardAnimation.Order order, Action callback = null);
+
+
         [Header("Settings")]
         [SerializeField] private Transform target;
         [Header("Move Animation")]
@@ -22,7 +25,20 @@ namespace Cards
         [SerializeField] private float discardTopHeight;
         [SerializeField] private AnimationCurve discardCurve;
 
+
+        private Dictionary<ICardAnimation.Types, BaseAnimation> animationDict;
         private Coroutine currantAnimation;
+
+        private void Awake()
+        {
+            animationDict = new Dictionary<ICardAnimation.Types, BaseAnimation>()
+            {
+                {ICardAnimation.Types.MoveTo, MoveTo },
+                {ICardAnimation.Types.FlyTo, FlyToHand },
+                {ICardAnimation.Types.DiscardMove, DiscardMove },
+                {ICardAnimation.Types.OtherPlace, OtherPlace },
+            };
+        }
 
 
         private void StopPrevAnimation()
@@ -35,6 +51,11 @@ namespace Cards
         }
 
 
+
+        public void DoMove(ICardAnimation.Types type, Vector3 position, Quaternion rotation, float time, ICardAnimation.Order order, Action callback = null)
+        {
+            animationDict[type]?.Invoke(position, rotation, time, order, callback);
+        }
         private void CacheAnimation(ICardAnimation.Order order, IEnumerator coroutine, string name, Action onDone)
         {
             switch (order)
@@ -45,13 +66,14 @@ namespace Cards
                     currantAnimation = StartCoroutine(coroutine);
                     break;
                 case ICardAnimation.Order.IfNotPlaying:
-                    if(currantAnimation == null)
+                    if (currantAnimation == null)
                     {
                         currantAnimation = StartCoroutine(coroutine);
                     }
                     break;
             }
         }
+
 
 
         public void FlyToHand(Vector3 position, Quaternion rotation, float time, ICardAnimation.Order order, Action callback = null)
@@ -90,6 +112,43 @@ namespace Cards
             yield break;
         }
 
+        public void OtherPlace(Vector3 position, Quaternion rotation, float time, ICardAnimation.Order order, Action callback = null)
+        {
+            CacheAnimation(order, OtherPlaceCour(position, rotation, time, callback), nameof(OtherPlace), callback);
+        }
+        private IEnumerator OtherPlaceCour(Vector3 position, Quaternion rotation, float time, Action callback = null)
+        {
+            var wait = new WaitForFixedUpdate();
+            float currantTime = 0;
+            Vector3 startPosition = target.position;
+            Quaternion startRotation = target.rotation;
+
+            while (currantTime < time)
+            {
+                float ratio = flyEase.Evaluate(currantTime / time);
+
+                Vector3 currantPosition = Vector3.Lerp(startPosition, position, ratio);
+                Vector3 height = Vector3.up * flyCurve.Evaluate(ratio) * flyTopHeight;
+                Quaternion currantRotation = Quaternion.Lerp(startRotation, rotation, ratio * 2);
+
+                target.transform.position = currantPosition + height;
+                target.transform.rotation = currantRotation;
+
+
+                currantTime += Time.fixedDeltaTime;
+                yield return wait;
+            }
+
+            target.transform.position = position;
+            target.transform.rotation = rotation;
+            currantAnimation = null;
+
+
+            callback?.Invoke();
+            yield break;
+        }
+
+
         public void DiscardMove(Vector3 position, Quaternion rotation, float time, ICardAnimation.Order order, Action callback = null)
         {
             CacheAnimation(order, DiscardMoveCour(position, rotation, time, callback), nameof(DiscardMove), callback);
@@ -125,7 +184,6 @@ namespace Cards
             callback?.Invoke();
             yield break;
         }
-
 
         public void MoveTo(Vector3 position, Quaternion rotation, float time, ICardAnimation.Order order, Action callback = null)
         {

@@ -9,6 +9,9 @@ namespace Cards
 { 
     public class Hand : MonoBehaviour, ICardHolder, ICardVisitor
     {
+        [Header("State")]
+        [SerializeField] private List<Card> cards = new List<Card>();
+        [SerializeField] private PlayerWrapper player;
         [Header("Settings")]
         [SerializeField] private AnimationCurve placeCurve;
         [SerializeField] private float placeOffsetZ;
@@ -21,8 +24,6 @@ namespace Cards
         [SerializeField] private CardFactory cardFactory;
 
 
-        private List<Card> cards = new List<Card>();
-        private PlayerWrapper player;
 
         public int CardsCount => cards.Count;
         public List<Card> Cards => cards;
@@ -50,8 +51,9 @@ namespace Cards
                 DropCardData info = data as DropCardData;
 
                 AddCard(card);
+                int cardIndex = 0;
 
-                switch(info.Sender)
+                switch (info.Sender)
                 {
                     case DropCardData.SenderTypes.Self:
                         card.Takable = true;
@@ -59,8 +61,17 @@ namespace Cards
                         break;
                     case DropCardData.SenderTypes.Dect:
                         card.Takable = false;
-                        int index = Cards.IndexOf(card);
-                        card.FlyTo(CardPosition(index), CardRotation(index), 1f, ICardAnimation.Order.Override, () =>
+                        cardIndex = Cards.IndexOf(card);
+                        card.DoMove(ICardAnimation.Types.FlyTo, CardPosition(cardIndex), CardRotation(cardIndex), 1f, ICardAnimation.Order.Override, () =>
+                        {
+                            card.Takable = true;
+                            SortCards(ICardAnimation.Order.IfNotPlaying);
+                        });
+                        break;
+                    case DropCardData.SenderTypes.Table:
+                        card.Takable = false;
+                        cardIndex = Cards.IndexOf(card);
+                        card.DoMove(ICardAnimation.Types.FlyTo, CardPosition(cardIndex), CardRotation(cardIndex), 1f, ICardAnimation.Order.Override, () =>
                         {
                             card.Takable = true;
                             SortCards(ICardAnimation.Order.IfNotPlaying);
@@ -94,7 +105,7 @@ namespace Cards
                 Quaternion rotation = CardRotation(i);
 
                 card.Takable = false;
-                card.MoveTo(position, rotation, 0.25f, order, () => card.Takable = true);
+                card.DoMove(ICardAnimation.Types.MoveTo, position, rotation, 0.25f, order, () => card.Takable = true);
 
                 i++;
             }
@@ -128,9 +139,10 @@ namespace Cards
             }
 
             cards.Add(card);
+
             card.Owner = player;
             card.Body.transform.parent = cardPlace;
-            card.OnTaken += RemoveCard;
+            card.OnDropped += RemoveCard;
         }
         private void RemoveCard(IDragable card)
         {
@@ -144,7 +156,7 @@ namespace Cards
 
                 cards.Remove((Card)card);
                 card.Body.transform.parent = null;
-                card.OnTaken -= RemoveCard;
+                card.OnDropped -= RemoveCard;
                 
                 SortCards(ICardAnimation.Order.Override);
             }

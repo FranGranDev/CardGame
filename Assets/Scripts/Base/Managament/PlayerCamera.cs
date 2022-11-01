@@ -18,7 +18,7 @@ namespace Managament
 
         }
 
-        private void Switch()
+        public void Switch()
         {
             isFirst = !isFirst;
 
@@ -34,14 +34,6 @@ namespace Managament
 
             camera.transform.position = point.transform.position;
             camera.transform.rotation = point.transform.rotation;
-        }
-
-        private void Update()
-        {
-            if(Input.GetKeyDown(KeyCode.S))
-            {
-                Switch();
-            }
         }
     }
 }

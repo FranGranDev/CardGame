@@ -44,6 +44,11 @@ MonoBehaviour:
   - UpdatePlayerState
   - DoDeckSendCard
   - DoGenerateDeck
+  - DoTableNextMove
+  - DoPlayerAction
+  - DoTableEndMove
+  - DoClientInitilize
+  - DoPlaceCard
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

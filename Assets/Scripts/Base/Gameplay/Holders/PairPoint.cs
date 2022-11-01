@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Cards
 {
-    class PairPoint
+    public class PairPoint
     {
         public PairPoint(Vector2Int key, Vector3 position, Transform point)
         {
@@ -24,17 +24,7 @@ namespace Cards
         {
             get
             {
-                float height = 0;
-                foreach(CardPair pair in cardPairs)
-                {
-                    height += 0.1f;
-                    if (pair.Done)
-                    {
-                        height += 0.15f;
-                    }
-                }
-
-                return position + Vector3.up * height;
+                return position + Vector3.up * cardPairs.Count * 0.25f;
             }
         }
 
@@ -54,6 +44,11 @@ namespace Cards
             get => Pair != null && !Pair.Done;
         }
 
+
+        public void Clear()
+        {
+            cardPairs.Clear();
+        }
         public void CreateNewPair(CardPair pair)
         {
             cardPairs.Push(pair);

@@ -18,11 +18,12 @@
         public Card Defender { get; private set; }
 
 
-        public bool TryBeat(Card other)
+        public bool CanBeat(Card other)
         {
-            if (Done)
-                return false;
-
+            return comparator.CanBeat(other, Attacker);
+        }
+        public bool Beat(Card other)
+        {
             Done = comparator.CanBeat(other, Attacker);
             if(Done)
             {

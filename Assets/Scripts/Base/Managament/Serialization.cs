@@ -15,7 +15,6 @@ namespace Managament
 
             return result;
         }
-
         public static byte[] SerializeVector2Int(object data)
         {
             Vector2Int vector = (Vector2Int)data;
@@ -29,11 +28,8 @@ namespace Managament
 
         public static object DeserializeCardInfo(byte[] data)
         {
-            CardInfo result = new CardInfo(BitConverter.ToInt32(data, 0), BitConverter.ToInt32(data, 4));
-
-            return result;
+            return new CardInfo(BitConverter.ToInt32(data, 0), BitConverter.ToInt32(data, 4));
         }
-
         public static byte[] SerializeCardInfo(object data)
         {
             CardInfo info = (CardInfo)data;
@@ -44,5 +40,21 @@ namespace Managament
 
             return result;
         }
+
+        public static object DeserializePlayerState(byte[] data)
+        {
+            return new PlayerWrapper.Data(BitConverter.ToInt32(data, 0), BitConverter.ToInt32(data, 4));
+        }
+        public static byte[] SerializePlayerState(object data)
+        {
+            PlayerWrapper.Data playerData = (PlayerWrapper.Data)data;
+            byte[] result = new byte[8];
+
+            BitConverter.GetBytes(playerData.moveState).CopyTo(result, 0);
+            BitConverter.GetBytes(playerData.playerState).CopyTo(result, 4);
+
+            return result;
+        }
+
     }
 }
