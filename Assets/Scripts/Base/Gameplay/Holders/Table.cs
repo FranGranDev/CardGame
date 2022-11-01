@@ -157,7 +157,7 @@ namespace Cards
             PairPoint min = GetNearPoint(info.position);
 
             Vector3 position = Vector3.Lerp(info.position, min.Position, 0.75f);
-            position.y = min.position.y + 0.5f;
+            position.y += 0.5f;
 
             Quaternion rotation = Quaternion.identity;
 
