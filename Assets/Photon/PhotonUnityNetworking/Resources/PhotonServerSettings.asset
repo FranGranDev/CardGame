@@ -50,6 +50,11 @@ MonoBehaviour:
   - DoClientInitilize
   - DoPlaceCard
   - DoPlayersStatesChange
+  - DoOtherLeave
+  - DoGameEnded
+  - DoPlayerReadyChanged
+  - DoRestartGame
+  - DoPlayerExit
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

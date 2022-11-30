@@ -6,11 +6,12 @@ namespace Cards
     [System.Serializable]
     public class PlayerWrapper
     {
-        public PlayerWrapper(int id, Hand hands, bool local = false)
+        public PlayerWrapper(int id, Hand hands, string name, bool local = false)
         {
             Id = id;
             Local = local;
             Hands = hands;
+            Name = name;
             Hands.Initilize(this);
 
             MoveState = MoveStates.Idle;
@@ -19,9 +20,12 @@ namespace Cards
 
         [SerializeField] private bool local;
         [SerializeField] private int id;
+        [SerializeField] private string name;
         [SerializeField] private Hand hands;
         [SerializeField] private MoveStates moveState;
         [SerializeField] private PlayerStates playerState;
+        [SerializeField] private bool online = true;
+        [SerializeField] private bool ready;
 
 
 
@@ -34,6 +38,11 @@ namespace Cards
         {
             get => id;
             private set => id = value;
+        }
+        public string Name
+        {
+            get => name;
+            private set => name = value;
         }
         public Hand Hands
         {
@@ -60,6 +69,18 @@ namespace Cards
                 OnStateChanged?.Invoke(this);
             }
         }
+
+        public bool Online
+        {
+            get => online;
+            set => online = value;
+        }
+        public bool Ready
+        {
+            get => ready;
+            set => ready = value;
+        }
+
 
         public event System.Action<PlayerWrapper> OnStateChanged;
         public event System.Action<PlayerWrapper> OnAction;

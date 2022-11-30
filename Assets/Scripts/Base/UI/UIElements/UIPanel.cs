@@ -33,6 +33,9 @@ namespace UI
             }
             set
             {
+                if (isShown == value)
+                    return;
+
                 tween?.Kill();
 
                 isShown = value;

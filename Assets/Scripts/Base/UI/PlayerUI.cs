@@ -13,6 +13,7 @@ namespace UI
         [SerializeField] private PlayerWrapper.MoveStates moveState;
 
         [Space, Header("End Game View")]
+        [SerializeField] private UIPanel endBackground;
         [SerializeField] private UIEndGame victory;
         [SerializeField] private UIEndGame defeat;
 
@@ -21,11 +22,17 @@ namespace UI
         [SerializeField] private TextMeshProUGUI buttonText;
         [SerializeField] private Button button;
 
-
         private PlayerWrapper player;
         private PlayerWrapper enemy;
 
-        public event System.Action OnLeave;
+
+        private UIEndGame currantEndPanel;
+
+
+        public event System.Action OnSurrender;
+
+        public event System.Action OnReady;
+        public event System.Action OnRematch;
         public event System.Action OnExit;
 
 
@@ -56,17 +63,8 @@ namespace UI
             }
         }
 
-        public void Victory(Table.MatchData matchData)
-        {
 
-        }
-        public void Defeat(Table.MatchData matchData)
-        {
-
-        }
-
-
-        #region Buttons
+        #region In Game Panel
 
         public void PlayerAction()
         {
@@ -75,12 +73,60 @@ namespace UI
 
         public void Leave()
         {
-            OnLeave?.Invoke();
+            OnSurrender?.Invoke();
         }
 
-        public void Exit()
+        #endregion
+
+        #region End Panel
+
+        public void Victory(Table.MatchData matchData, bool isServer)
+        {
+            ShowEndPopup(victory, matchData, isServer);
+        }
+        public void Defeat(Table.MatchData matchData, bool isServer)
+        {
+            ShowEndPopup(defeat, matchData, isServer);
+        }
+
+        public void MakeReady()
+        {
+            currantEndPanel?.UpdateState(UIEndGame.States.IamReady);
+        }
+        public void AllPlayersReady()
+        {
+            currantEndPanel?.UpdateState(UIEndGame.States.Rematch);
+        }
+        public void OtherExit()
+        {
+            currantEndPanel?.UpdateState(UIEndGame.States.Exit);
+        }
+
+        private void ShowEndPopup(UIEndGame panel, Table.MatchData matchData, bool isServer)
+        {
+            currantEndPanel = panel;
+
+            UIEndGame.States state = isServer ? UIEndGame.States.WaitForPlayers : UIEndGame.States.NotReady;
+            if (matchData.EndType == Table.MatchData.EndTypes.Exit)
+            {
+                state = UIEndGame.States.Exit;
+            }
+
+            panel.Show(matchData, state, Ready, Rematch, Exit);
+            endBackground.IsShown = true;
+        }
+
+        private void Ready()
+        {
+            OnReady?.Invoke();
+        }
+        private void Exit()
         {
             OnExit?.Invoke();
+        }
+        private void Rematch()
+        {
+            OnRematch?.Invoke();
         }
 
         #endregion

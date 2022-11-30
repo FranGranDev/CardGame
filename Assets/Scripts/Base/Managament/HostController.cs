@@ -4,6 +4,7 @@ using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using System.Linq;
 using UnityEngine;
 
@@ -12,12 +13,17 @@ namespace Managament
 {
     public class HostController : MonoBehaviourPunCallbacks
     {
+        public bool isServer => PhotonNetwork.IsMasterClient;
+
         private Table table;
         private Deck deck;
-
         private List<PlayerWrapper> players;
-
         private System.Action<Data> onClientGetServerData;
+
+        public event System.Action OnRestartGame;
+        public event System.Action<PlayerWrapper> OnOtherReadyChanged;
+        public event System.Action<PlayerWrapper> OnOtherExit;
+
         public void ServerInitilize(System.Action<Data> onClientGetServerData)
         {
             this.onClientGetServerData = onClientGetServerData; 
@@ -46,11 +52,12 @@ namespace Managament
 
             players = new List<PlayerWrapper>()
             {
-                new PlayerWrapper(PhotonNetwork.LocalPlayer.ActorNumber, player, true),
+                new PlayerWrapper(PhotonNetwork.LocalPlayer.ActorNumber, player, PhotonNetwork.LocalPlayer.NickName, true),
             };
             if(PhotonNetwork.PlayerListOthers.Length > 0)
             {
-                players.Add(new PlayerWrapper(PhotonNetwork.PlayerListOthers[0].ActorNumber, enemy));
+                Player other = PhotonNetwork.PlayerListOthers[0];
+                players.Add(new PlayerWrapper(other.ActorNumber, enemy, other.NickName));
             }
             else
             {
@@ -63,24 +70,6 @@ namespace Managament
 
             return players;
         }
-        private void SubscribeForGameActions()
-        {
-            deck.OnDeckGenerated += OnDeckGenerated;
-            deck.OnSendCard += OnDeckSendCard;
-
-            table.OnNextMove += OnTableNextMove;
-            table.OnEndMove += OnTableEndMove;
-            table.OnCardPlaced += OnCardPlaced;
-            table.OnGameEnded += OnGameEnded;
-        }
-
-        private void RegisterCustomTypes()
-        {
-            PhotonPeer.RegisterType(typeof(Vector2Int), 10, Serialization.SerializeVector2Int, Serialization.DeserializeVector2Int);
-            PhotonPeer.RegisterType(typeof(CardInfo), 11, Serialization.SerializeCardInfo, Serialization.DeserializeCardInfo);
-            PhotonPeer.RegisterType(typeof(PlayerWrapper.Data), 12, Serialization.SerializePlayerState, Serialization.DeserializePlayerState);
-        }
-
         public void StartGame(bool offline = false)
         {
             if (PhotonNetwork.IsMasterClient || offline)
@@ -92,6 +81,76 @@ namespace Managament
             }
         }
 
+
+        private void SubscribeForGameActions()
+        {
+            deck.OnDeckGenerated += OnDeckGenerated;
+            deck.OnSendCard += OnDeckSendCard;
+
+            table.OnNextMove += OnTableNextMove;
+            table.OnEndMove += OnTableEndMove;
+            table.OnCardPlaced += OnCardPlaced;
+            table.OnGameEnded += OnGameEnded;
+        }
+        private void RegisterCustomTypes()
+        {
+            PhotonPeer.RegisterType(typeof(Vector2Int), 10, Serialization.SerializeVector2Int, Serialization.DeserializeVector2Int);
+            PhotonPeer.RegisterType(typeof(CardInfo), 11, Serialization.SerializeCardInfo, Serialization.DeserializeCardInfo);
+            PhotonPeer.RegisterType(typeof(PlayerWrapper.Data), 12, Serialization.SerializePlayerState, Serialization.DeserializePlayerState);
+        }
+
+
+        #region Lobby-Networking
+
+        public void OnPlayerReadyChanged(PlayerWrapper player)
+        {
+            photonView.RPC(nameof(DoPlayerReadyChanged), RpcTarget.MasterClient, new object[2] { player.Id, player.Ready });
+        }
+        [PunRPC]
+        public void DoPlayerReadyChanged(object[] data)
+        {
+            int id = (int)data[0];
+
+            PlayerWrapper player = players.First(x => x.Id == id);
+
+            player.Ready = (bool)data[1];
+
+            OnOtherReadyChanged?.Invoke(player);
+        }
+
+
+
+
+        public void LeaveRoom()
+        {
+            PhotonNetwork.LeaveRoom();
+        }
+        public override void OnLeftRoom()
+        {
+            SceneManager.LoadScene(0);
+        }
+
+        public override void OnPlayerLeftRoom(Player otherPlayer)
+        {
+            PlayerWrapper player = players.First(x => x.Id == otherPlayer.ActorNumber);
+
+            player.Online = false;
+
+            OnOtherExit?.Invoke(player);
+        }
+
+
+        public void RestartGame()
+        {
+            DoRestartGame();
+            //photonView.RPC(nameof(DoRestartGame), RpcTarget.All);
+        }
+        [PunRPC]
+        public void DoRestartGame()
+        {
+            OnRestartGame?.Invoke();
+        }
+        #endregion
 
         #region Game-Networking
 
@@ -113,7 +172,7 @@ namespace Managament
                 data.EndType,
             };
 
-            photonView.RPC(nameof(DoGameEnded), RpcTarget.Others, data);
+            photonView.RPC(nameof(DoGameEnded), RpcTarget.All, info);
         }
         [PunRPC]
         public void DoGameEnded(object[] data)
@@ -123,7 +182,7 @@ namespace Managament
 
             Table.MatchData info = new Table.MatchData(winner, looser, (int)data[2], (Table.MatchData.EndTypes)data[3]);
 
-            table.GameEnded(info);
+            table.GameEndedLocal(info);
         }
 
         #endregion
@@ -261,13 +320,6 @@ namespace Managament
 
             deck.SetDeckData(cards);
         }
-
-        #endregion
-
-        #region Player-Networkin
-
-        
-
 
         #endregion
 

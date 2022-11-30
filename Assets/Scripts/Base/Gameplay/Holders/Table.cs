@@ -93,9 +93,9 @@ namespace Cards
         public event System.Action<States> OnEndMove;
         public event System.Action<PairPoint, Card> OnCardPlaced;
 
-        public event System.Action<PlayerWrapper> OnLeaveGame;
 
         public event System.Action<MatchData> OnGameEnded;
+        public event System.Action<MatchData> OnGameEndedLocal;
 
 
         #region Initilize
@@ -545,6 +545,22 @@ namespace Cards
             
         }
 
+        public void SelfLeave(PlayerWrapper self) //Send
+        {
+            PlayerWrapper winner = players.First(x => x.Id != self.Id);
+
+            MatchData data = new MatchData(winner, self, currantMove, MatchData.EndTypes.Exit);
+
+            GameEndedLocal(data);
+        }
+        public void OtherLeave(PlayerWrapper self) //Send
+        {
+            PlayerWrapper looser = players.First(x => x.Id != self.Id);
+
+            MatchData data = new MatchData(self, self, currantMove, MatchData.EndTypes.Exit);
+
+            GameEndedLocal(data);
+        }
         public void Surrender(PlayerWrapper self) //Send
         {
             PlayerWrapper winner = players.First(x => x.Id != self.Id);
@@ -554,9 +570,9 @@ namespace Cards
             OnGameEnded?.Invoke(data);
         }
 
-        public void GameEnded(MatchData data) //Accept
+        public void GameEndedLocal(MatchData data) //Accept
         {
-            OnGameEnded?.Invoke(data);
+            OnGameEndedLocal?.Invoke(data);
         }
 
         #endregion
@@ -571,7 +587,7 @@ namespace Cards
                 EndType = endType;
             }
 
-            public enum EndTypes { Game, Surrender}
+            public enum EndTypes { Game, Surrender, Exit}
 
             public PlayerWrapper Winner { get; }
             public PlayerWrapper Looser { get; }
