@@ -61,18 +61,13 @@ namespace Cards
             }
         }
 
-        public System.Action<PlayerWrapper> OnStateChanged { get; set; }
-        public System.Action<PlayerWrapper> OnAction { get; set; }
+        public event System.Action<PlayerWrapper> OnStateChanged;
+        public event System.Action<PlayerWrapper> OnAction;
 
 
         public void DoAction()
         {
             OnAction?.Invoke(this);
-        }
-        public void Accept(Data data)
-        {
-            MoveState = (MoveStates)data.moveState;
-            PlayerState = (PlayerStates)data.playerState;
         }
         
 
@@ -81,8 +76,8 @@ namespace Cards
         {
             Idle,
             Playing,
-            TakingCards,
-            ThrowingCards,
+            FirstMove,
+            EnemyMove,
             Pass,
         }
         public enum PlayerStates
@@ -95,18 +90,20 @@ namespace Cards
         {
             public Data(PlayerWrapper player)
             {
-                moveState = (int)player.moveState;
-                playerState = (int)player.playerState;
+                id = player.id;
+                moveState = player.moveState;
+                playerState = player.playerState;
             }
-            public Data(int moveState, int playerState)
+            public Data(int id, int moveState, int playerState)
             {
-                this.moveState = moveState;
-                this.playerState = playerState;
+                this.id = id;
+                this.moveState = (MoveStates)moveState;
+                this.playerState = (PlayerStates)playerState;
             }
 
-
-            public readonly int moveState;
-            public readonly int playerState;
+            public readonly int id;
+            public readonly MoveStates moveState;
+            public readonly PlayerStates playerState;
         }
     }
 }

@@ -4,6 +4,7 @@ using Cards.Data;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 
 namespace Managament
@@ -12,6 +13,8 @@ namespace Managament
     {
         #region Links
 
+        [Header("States")]
+        [SerializeField] private States state;
         [Header("Links")]
         [SerializeField] private HostController hostController;
         [Space]
@@ -69,8 +72,39 @@ namespace Managament
             playerUI.Initilize(Self, Enemy);
             enemyUI.Initilize(Enemy, Self); //Debug
 
+
+            state = States.Game;
+
+            table.OnGameEnded += GameEnded;
+            playerUI.OnLeave += Leave;
+            playerUI.OnExit += Exit;
+
+
             hostController.StartGame(isOffline);
         }
+
+        private void GameEnded(Table.MatchData data)
+        {
+            DataBase.RecordGame(data);
+
+            if(data.Winner.Local)
+            {
+                playerUI.Victory(data);
+            }
+            else
+            {
+                playerUI.Defeat(data);
+            }
+        }
+        private void Leave()
+        {
+            table.Surrender(Self);
+        }
+        private void Exit()
+        {
+            SceneManager.LoadScene(0);
+        }
+
 
         private void Update()
         {
@@ -82,5 +116,8 @@ namespace Managament
                 enemyUI.gameObject.SetActive(!localPlayer);                
             }
         }
+
+
+        public enum States { NotStarted, Game, Ended, }
     }
 }

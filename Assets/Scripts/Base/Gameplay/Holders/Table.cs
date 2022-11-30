@@ -59,18 +59,15 @@ namespace Cards
         } //fix
         public PlayerWrapper Attacker
         {
-            get
-            {
-                return players[(CurrantMove) % 2];
-            }
+            get => attacker;
+            private set => attacker = value;
         }
         public PlayerWrapper Defender
         {
-            get
-            {
-                return players[(CurrantMove + 1) % 2];
-            }
+            get => defender;
+            private set => defender = value;
         }
+
 
         public float AvgPlaceAttackRotation
         {
@@ -92,9 +89,14 @@ namespace Cards
         }
 
 
-        public System.Action<int, PlayerWrapper, PlayerWrapper> OnNextMove { get; set; }
-        public System.Action<PairPoint, Card> OnCardPlaced { get; set; }
-        public System.Action<States> OnEndMove { get; set; }
+        public event System.Action<int, PlayerWrapper, PlayerWrapper> OnNextMove;
+        public event System.Action<States> OnEndMove;
+        public event System.Action<PairPoint, Card> OnCardPlaced;
+
+        public event System.Action<PlayerWrapper> OnLeaveGame;
+
+        public event System.Action<MatchData> OnGameEnded;
+
 
         #region Initilize
 
@@ -193,7 +195,7 @@ namespace Cards
         }
 
 
-        public void PlaceCard(Vector2Int pointKey, CardInfo info, PlayerWrapper player)//From Server
+        public void PlaceCard(Vector2Int pointKey, CardInfo info, PlayerWrapper player)//Accpet
         {
             Card card = player.Hands.Cards.First(x => x.Info.Equals(info));
             pointKey = new Vector2Int(2, 2) - pointKey;
@@ -201,8 +203,10 @@ namespace Cards
 
             card.OnDropped?.Invoke(card);
             PlaceCard(card, point);
+
+            UpdatePlayersStates();
         }
-        public void PlaceCard(Card card, PairPoint point)//From Server
+        public void PlaceCard(Card card, PairPoint point)//Accept
         {
             if (card.Owner == Attacker)
             {
@@ -229,11 +233,13 @@ namespace Cards
             {
                 Debug.LogError("Card have no owner!");
             }
+
+            UpdatePlayersStates();
         }
     
 
 
-        private void TryPlaceCard(Card card)//In Client
+        private void TryPlaceCard(Card card)//Send
         {
             if(card.Owner == Attacker)
             {
@@ -245,6 +251,8 @@ namespace Cards
                 if(point.CanPutAttack && (firstMove || canPut))
                 {
                     OnCardPlaced?.Invoke(point, card);
+                    Attacker.MoveState = PlayerWrapper.MoveStates.Playing;
+                    Defender.MoveState = PlayerWrapper.MoveStates.Playing;
                     PlaceAttackCard(point, card, ICardAnimation.Types.MoveTo, 0.25f);
                 }
                 else
@@ -259,6 +267,8 @@ namespace Cards
                 if (point.CanPutDefend && point.Pair.CanBeat(card))
                 {
                     OnCardPlaced?.Invoke(point, card);
+                    Attacker.MoveState = PlayerWrapper.MoveStates.Playing;
+                    Defender.MoveState = PlayerWrapper.MoveStates.Playing;
                     PlaceDefendCard(point, card, ICardAnimation.Types.MoveTo, 0.25f);
                 }
                 else
@@ -270,6 +280,9 @@ namespace Cards
             {
                 Debug.LogError("Card have no owner!");
             }
+
+
+            UpdatePlayersStates();
         }
 
         private void PlaceAttackCard(PairPoint point, Card card, ICardAnimation.Types animation, float time)
@@ -338,38 +351,66 @@ namespace Cards
         public enum States { Idle, Game, Defended, NotDefended }
         
 
-        public void NextMove() //Server
+        public void StartMove() //Send
+        {
+            if(Random.Range(0, 2) == 0)
+            {
+                Attacker = players[0];
+                Defender = players[1];
+            }
+            else
+            {
+                Attacker = players[1];
+                Defender = players[0];
+            }
+
+            State = States.Game;
+
+            Attacker.PlayerState = PlayerWrapper.PlayerStates.Attacker;
+            Defender.PlayerState = PlayerWrapper.PlayerStates.Defender;
+
+            deck.DealtCards();
+            UpdatePlayersStates();
+
+            OnNextMove?.Invoke(CurrantMove, Attacker, Defender);
+        }
+        public void NextMove() //Send
         {
             if (State == States.Idle)
             {
                 CurrantMove++;
                 State = States.Game;
 
-                Attacker.PlayerState = PlayerWrapper.PlayerStates.Attacker;
-                Attacker.MoveState = PlayerWrapper.MoveStates.Playing;
 
+                Attacker.PlayerState = PlayerWrapper.PlayerStates.Attacker;
                 Defender.PlayerState = PlayerWrapper.PlayerStates.Defender;
-                Defender.MoveState = PlayerWrapper.MoveStates.Playing;
 
                 deck.DealtCards();
+                UpdatePlayersStates();
 
                 OnNextMove?.Invoke(CurrantMove, Attacker, Defender);
             }
         }
-        public void NextMove(int move) //Client
+        public void NextMove(int move, PlayerWrapper.Data attacker, PlayerWrapper.Data defender) //Accept
         {
             Debug.Log("Next Move");
 
             CurrantMove = move;
             State = States.Game;
 
-            Attacker.PlayerState = PlayerWrapper.PlayerStates.Attacker;
-            Attacker.MoveState = PlayerWrapper.MoveStates.Playing;
+            Debug.Log(attacker.id + "  " + defender.id);
 
-            Defender.PlayerState = PlayerWrapper.PlayerStates.Defender;
-            Defender.MoveState = PlayerWrapper.MoveStates.Playing;
+            Attacker = players.First(x => x.Id == attacker.id);
+            Defender = players.First(x => x.Id == defender.id);
+
+            Attacker.PlayerState = attacker.playerState;
+            Attacker.MoveState = attacker.moveState;
+
+            Defender.PlayerState = defender.playerState;
+            Defender.MoveState = defender.moveState;
+
+            UpdatePlayersStates();
         }
-
 
         public void EndMove(States endState)
         {
@@ -378,6 +419,33 @@ namespace Cards
                 State = States.Idle;
                 StartCoroutine(EndMoveCour(endState));
             }
+        } //Send
+        private IEnumerator EndMoveCour(States endState)
+        {
+            Debug.Log("Next Move: " + CurrantMove);
+            switch (endState)
+            {
+                case States.Defended:                    
+                    SendAllCard(discardPile);
+                    SwapPlayers();
+                    break;
+                case States.NotDefended:
+                    SendAllCard(Defender);
+                    break;
+            }
+
+
+            Attacker.PlayerState = PlayerWrapper.PlayerStates.Idle;
+            Attacker.MoveState = PlayerWrapper.MoveStates.Idle;
+
+            Defender.PlayerState = PlayerWrapper.PlayerStates.Idle;
+            Defender.MoveState = PlayerWrapper.MoveStates.Idle;
+
+            yield return new WaitForSeconds(1f);
+
+            NextMove();
+
+            yield break;
         }
         public void EndMove(States endState, int move)
         {
@@ -399,39 +467,47 @@ namespace Cards
 
             Defender.PlayerState = PlayerWrapper.PlayerStates.Idle;
             Defender.MoveState = PlayerWrapper.MoveStates.Idle;
-        }
-        private IEnumerator EndMoveCour(States endState)
+        } //Accept
+
+
+        
+        private void UpdatePlayersStates() //Local only
         {
-            Debug.Log("Next Move: " + CurrantMove);
-            switch(endState)
+            if(pairPoints.Values.Count(x => x.Pair != null) == 0)
             {
-                case States.Defended:;
-                    SendAllCard(discardPile);
-                    break;
-                case States.NotDefended:
-                    SendAllCard(Defender);
-                    break;
+                Attacker.MoveState = PlayerWrapper.MoveStates.FirstMove;
+                Defender.MoveState = PlayerWrapper.MoveStates.FirstMove;
+                return;
             }
+            if (pairPoints.Values.Count(x => x.CanPutDefend) > 0)
+            {
+                Defender.MoveState = PlayerWrapper.MoveStates.Playing;
+            }
+            else
+            {
+                Defender.MoveState = PlayerWrapper.MoveStates.EnemyMove;
+            }
+        }
+        public void UpdatePlayersStates(PlayerWrapper.Data attacker, PlayerWrapper.Data defender) //Accept
+        {
+            Attacker.MoveState = attacker.moveState;
+            Attacker.PlayerState = attacker.playerState;
 
-
-            Attacker.PlayerState = PlayerWrapper.PlayerStates.Idle;
-            Attacker.MoveState = PlayerWrapper.MoveStates.Idle;
-
-            Defender.PlayerState = PlayerWrapper.PlayerStates.Idle;
-            Defender.MoveState = PlayerWrapper.MoveStates.Idle;
-
-            yield return new WaitForSeconds(1f);
-
-            NextMove();
-
-            yield break;
+            Defender.MoveState = defender.moveState;
+            Defender.PlayerState = defender.playerState;
+        }
+        private void SwapPlayers()
+        {
+            PlayerWrapper temp = Attacker;
+            Attacker = Defender;
+            Defender = temp;
         }
 
         #endregion
 
         #region PlayerActions
-
-        private void OnPlayerAction(PlayerWrapper player)//Client
+        
+        private void OnPlayerAction(PlayerWrapper player)
         {
             if (State != States.Game)
                 return;
@@ -469,6 +545,38 @@ namespace Cards
             
         }
 
+        public void Surrender(PlayerWrapper self) //Send
+        {
+            PlayerWrapper winner = players.First(x => x.Id != self.Id);
+
+            MatchData data = new MatchData(winner, self, currantMove, MatchData.EndTypes.Surrender);
+
+            OnGameEnded?.Invoke(data);
+        }
+
+        public void GameEnded(MatchData data) //Accept
+        {
+            OnGameEnded?.Invoke(data);
+        }
+
         #endregion
+
+        public class MatchData
+        {
+            public MatchData(PlayerWrapper winner, PlayerWrapper looser, int moveCount, EndTypes endType)
+            {
+                Winner = winner;
+                Looser = looser;
+                MoveCount = moveCount;
+                EndType = endType;
+            }
+
+            public enum EndTypes { Game, Surrender}
+
+            public PlayerWrapper Winner { get; }
+            public PlayerWrapper Looser { get; }
+            public int MoveCount { get; }
+            public EndTypes EndType { get; }
+        }
     }
 }

@@ -2,6 +2,7 @@ using Cards;
 using UI;
 using ExitGames.Client.Photon;
 using Photon.Pun;
+using Photon.Realtime;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -17,7 +18,6 @@ namespace Managament
         private List<PlayerWrapper> players;
 
         private System.Action<Data> onClientGetServerData;
-
         public void ServerInitilize(System.Action<Data> onClientGetServerData)
         {
             this.onClientGetServerData = onClientGetServerData; 
@@ -71,7 +71,9 @@ namespace Managament
             table.OnNextMove += OnTableNextMove;
             table.OnEndMove += OnTableEndMove;
             table.OnCardPlaced += OnCardPlaced;
+            table.OnGameEnded += OnGameEnded;
         }
+
         private void RegisterCustomTypes()
         {
             PhotonPeer.RegisterType(typeof(Vector2Int), 10, Serialization.SerializeVector2Int, Serialization.DeserializeVector2Int);
@@ -86,7 +88,7 @@ namespace Managament
                 deck.GenerateDeckData();
                 deck.BuildDeck();
 
-                table.NextMove();
+                table.StartMove();
             }
         }
 
@@ -99,10 +101,32 @@ namespace Managament
             Data data = new Data((int)info[0]);
 
             onClientGetServerData?.Invoke(data);
+        }        
+
+        private void OnGameEnded(Table.MatchData data)
+        {
+            object[] info = new object[4]
+            {
+                data.Winner.Id,
+                data.Looser.Id,
+                data.MoveCount,
+                data.EndType,
+            };
+
+            photonView.RPC(nameof(DoGameEnded), RpcTarget.Others, data);
+        }
+        [PunRPC]
+        public void DoGameEnded(object[] data)
+        {
+            PlayerWrapper winner = players.First(x => x.Id == (int)data[0]);
+            PlayerWrapper looser = players.First(x => x.Id == (int)data[1]);
+
+            Table.MatchData info = new Table.MatchData(winner, looser, (int)data[2], (Table.MatchData.EndTypes)data[3]);
+
+            table.GameEnded(info);
         }
 
         #endregion
-
 
         #region Table-Networking
 
@@ -127,19 +151,39 @@ namespace Managament
             table.PlaceCard(key, info, player);
         }
 
+        private void OnPlayersStatesChanged(PlayerWrapper attacker, PlayerWrapper defender)
+        {
+            object[] data = new object[2]
+            {
+                new PlayerWrapper.Data(attacker),
+                new PlayerWrapper.Data(defender),
+            };
+
+            photonView.RPC(nameof(DoPlayersStatesChange), RpcTarget.Others, data);
+        }
+        [PunRPC]
+        public void DoPlayersStatesChange(object[] data)
+        {
+            table.UpdatePlayersStates((PlayerWrapper.Data)data[0], (PlayerWrapper.Data)data[1]);
+        }
+
         private void OnTableNextMove(int move, PlayerWrapper attacker, PlayerWrapper defender)
         {
             if (PhotonNetwork.IsMasterClient)
             {
-                photonView.RPC(nameof(DoTableNextMove), RpcTarget.Others, move);
+                object[] info = new object[3]
+                {
+                    move,
+                    new PlayerWrapper.Data(attacker),
+                    new PlayerWrapper.Data(defender),
+                };
+                photonView.RPC(nameof(DoTableNextMove), RpcTarget.Others, info);
             }
         }
         [PunRPC]
-        public void DoTableNextMove(object info)
+        public void DoTableNextMove(object[] info)
         {
-            int move = (int)info;
-
-            table.NextMove(move);
+            table.NextMove((int)info[0], (PlayerWrapper.Data)(info[1]), (PlayerWrapper.Data)(info[2]));
         }
 
         private void OnTableEndMove(Table.States endState)
@@ -220,6 +264,12 @@ namespace Managament
 
         #endregion
 
+        #region Player-Networkin
+
+        
+
+
+        #endregion
 
         public class Data
         {

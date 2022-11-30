@@ -43,18 +43,18 @@ namespace Managament
 
         public static object DeserializePlayerState(byte[] data)
         {
-            return new PlayerWrapper.Data(BitConverter.ToInt32(data, 0), BitConverter.ToInt32(data, 4));
+            return new PlayerWrapper.Data(BitConverter.ToInt32(data, 0), BitConverter.ToInt32(data, 4), BitConverter.ToInt32(data, 8));
         }
         public static byte[] SerializePlayerState(object data)
         {
             PlayerWrapper.Data playerData = (PlayerWrapper.Data)data;
-            byte[] result = new byte[8];
+            byte[] result = new byte[12];
 
-            BitConverter.GetBytes(playerData.moveState).CopyTo(result, 0);
-            BitConverter.GetBytes(playerData.playerState).CopyTo(result, 4);
+            BitConverter.GetBytes(playerData.id).CopyTo(result, 0);
+            BitConverter.GetBytes((int)playerData.moveState).CopyTo(result, 4);
+            BitConverter.GetBytes((int)playerData.playerState).CopyTo(result, 8);
 
             return result;
         }
-
     }
 }
