@@ -117,6 +117,13 @@ namespace Cards
 
             CreatePoints();
         }
+        public void Clear()
+        {
+            foreach(CardPair pair in currantPairs)
+            {
+                pair.Destroy();
+            }
+        }
 
         private void CreatePoints()
         {
@@ -195,8 +202,9 @@ namespace Cards
         }
 
 
-        public void PlaceCard(Vector2Int pointKey, CardInfo info, PlayerWrapper player)//Accpet
+        public void PlaceCard(Vector2Int pointKey, CardInfo info, PlayerWrapper player)//Accept
         {
+            Debug.Log($"C: {player.Hands.Cards.Count} | {info.index}  {info.suit}");
             Card card = player.Hands.Cards.First(x => x.Info.Equals(info));
             pointKey = new Vector2Int(2, 2) - pointKey;
             PairPoint point = pairPoints[pointKey];
@@ -293,7 +301,7 @@ namespace Cards
 
             Vector3 offset = new Vector3(-Random.Range(PlacePositionOffsetX.x, PlacePositionOffsetX.y), 0f, Random.Range(PlacePositionOffsetY.x, PlacePositionOffsetY.y));
             Vector3 position = point.Position + offset;
-            Debug.Log(point.Position);
+
             Quaternion rotation = Quaternion.Euler(0, Random.Range(PlaceAttackRotationOffset.x, PlaceAttackRotationOffset.y), 0);
 
             card.DoMove(animation, position, rotation, time, ICardAnimation.Order.Override);

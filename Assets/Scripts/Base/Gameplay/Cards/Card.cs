@@ -49,5 +49,18 @@ namespace Cards
         {
             Animations.DoMove(type, position, rotation, time, order, onDone);
         }
+    
+        public static void DestroyAll()
+        {
+            List<Card> all = new List<Card>(FindObjectsOfType<Card>());
+            foreach(Card card in all)
+            {
+                card.Destroy();
+            }
+        }
+        public void Destroy()
+        {
+            Destroy(gameObject);
+        }
     }
 }

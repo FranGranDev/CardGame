@@ -62,7 +62,15 @@ namespace UI
                 panel.Initilize();
             }
         }
-
+        public void Clear()
+        {
+            if(currantEndPanel)
+            {
+                currantEndPanel.IsShown = false;
+                endBackground.IsShown = false;
+                currantEndPanel = null;
+            }
+        }
 
         #region In Game Panel
 

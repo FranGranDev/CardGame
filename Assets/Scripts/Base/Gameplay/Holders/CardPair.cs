@@ -32,5 +32,18 @@
             }
             return Done;
         }
+        public void Destroy()
+        {
+            if (Attacker)
+            {
+                Attacker.Destroy();
+                Attacker = null;
+            }
+            if(Defender)
+            {
+                Defender.Destroy();
+                Defender = null;
+            }
+        }
     }
 }

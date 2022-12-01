@@ -10,7 +10,7 @@ namespace Cards
     public class Hand : MonoBehaviour, ICardHolder, ICardVisitor
     {
         [Header("State")]
-        [SerializeField] private List<Card> cards = new List<Card>();
+        [SerializeField] private List<Card> cards;
         [SerializeField] private PlayerWrapper player;
         [Header("Settings")]
         [SerializeField] private AnimationCurve placeCurve;
@@ -33,8 +33,9 @@ namespace Cards
         public void Initilize(PlayerWrapper player)
         {
             this.player = player;
-        }
 
+            cards = new List<Card>();
+        }
 
         #endregion
 

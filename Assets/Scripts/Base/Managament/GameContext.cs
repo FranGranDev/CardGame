@@ -46,16 +46,27 @@ namespace Managament
         }
 
 
+        private void OnEnable()
+        {
+            hostController.OnOtherReadyChanged += OtherReady;
+            hostController.OnOtherExit += OtherExit;
+            hostController.OnRestartGame += RestartGame;
 
+            table.OnGameEndedLocal += GameEnded;
+
+            playerUI.OnRematch += Rematch;
+            playerUI.OnReady += Ready;
+            playerUI.OnSurrender += Surrender;
+            playerUI.OnExit += Exit;
+        }
         private void Start()
         {
             hostController.ServerInitilize(InitilizeGame);
         }
 
         private void InitilizeGame(HostController.Data serverData)
-        {            
+        {
             DurakCard.SuitTypes trump = serverData.Trump;
-
 
             players = hostController.LocalInitilize(table, deck, player, enemy);
 
@@ -71,17 +82,6 @@ namespace Managament
             playerUI.Initilize(Self, Enemy);
             enemyUI.Initilize(Enemy, Self); //Debug
 
-
-            hostController.OnOtherReadyChanged += OtherReady;
-            hostController.OnOtherExit += OtherExit;
-
-            table.OnGameEndedLocal += GameEnded;
-
-            playerUI.OnRematch += Rematch;
-            playerUI.OnReady += Ready;
-            playerUI.OnSurrender += Surrender;
-            playerUI.OnExit += Exit;
-
             currantState = States.Game;
             hostController.StartGame(isOffline);
         }
@@ -89,7 +89,16 @@ namespace Managament
 
         private void GameEnded(Table.MatchData data)
         {
-            DataBase.RecordGame(data);
+            DataBase.MatchData matchData = new DataBase.MatchData
+            (
+                data.Winner.Name,
+                data.Looser.Name,
+                data.Winner == Self,
+                data.MoveCount,
+                (int)data.EndType
+            );
+            DataBase.RecordGame(matchData);
+
             currantState = States.Ended;
 
 
@@ -104,7 +113,14 @@ namespace Managament
         }
         private void RestartGame()
         {
+            Card.DestroyAll();
 
+            playerUI.Clear();
+            enemyUI.Clear();
+            table.Clear();
+            deck.Clear();
+
+            hostController.ServerInitilize(InitilizeGame);
         }
         private void OtherExit(PlayerWrapper other)
         {
@@ -182,7 +198,7 @@ namespace Managament
 
             if (Input.GetKeyDown(KeyCode.R))
             {
-                hostController.RestartGame();
+                RestartGame();
             }
         }
         private void OnApplicationQuit()

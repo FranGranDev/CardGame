@@ -51,6 +51,10 @@ namespace Cards
             this.cardFactory = cardFactory;
             this.trump = trump;
         }
+        public void Clear()
+        {
+
+        }
 
         public List<CardInfo> GenerateDeckData()
         {

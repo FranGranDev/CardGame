@@ -24,13 +24,19 @@ namespace Managament
         public event System.Action<PlayerWrapper> OnOtherReadyChanged;
         public event System.Action<PlayerWrapper> OnOtherExit;
 
+
+        private void Awake()
+        {
+            RegisterCustomTypes();
+        }
+
         public void ServerInitilize(System.Action<Data> onClientGetServerData)
         {
             this.onClientGetServerData = onClientGetServerData; 
 
-            if(!PhotonNetwork.IsConnected)
+
+            if(!PhotonNetwork.IsConnected || !PhotonNetwork.InRoom)
             {
-                //Not connected - test mode
                 onClientGetServerData?.Invoke(new Data(Random.Range(0, 4)));
                 return;
             }
@@ -42,33 +48,6 @@ namespace Managament
                 };
                 photonView.RPC(nameof(DoClientInitilize), RpcTarget.AllBuffered, data);
             }
-        }
-        public List<PlayerWrapper> LocalInitilize(Table table, Deck deck, Hand player, Hand enemy)
-        {
-            RegisterCustomTypes();
-
-            this.table = table;
-            this.deck = deck;
-
-            players = new List<PlayerWrapper>()
-            {
-                new PlayerWrapper(PhotonNetwork.LocalPlayer.ActorNumber, player, PhotonNetwork.LocalPlayer.NickName, true),
-            };
-            if(PhotonNetwork.PlayerListOthers.Length > 0)
-            {
-                Player other = PhotonNetwork.PlayerListOthers[0];
-                players.Add(new PlayerWrapper(other.ActorNumber, enemy, other.NickName));
-            }
-            else
-            {
-                PhotonNetwork.OfflineMode = true;
-            }
-
-            players = players.OrderBy(x => x.Id).ToList();
-
-            SubscribeForGameActions();
-
-            return players;
         }
         public void StartGame(bool offline = false)
         {
@@ -82,6 +61,16 @@ namespace Managament
         }
 
 
+        private void UnsubscribeForGameActions()
+        {
+            deck.OnDeckGenerated -= OnDeckGenerated;
+            deck.OnSendCard -= OnDeckSendCard;
+
+            table.OnNextMove -= OnTableNextMove;
+            table.OnEndMove -= OnTableEndMove;
+            table.OnCardPlaced -= OnCardPlaced;
+            table.OnGameEnded -= OnGameEnded;
+        }
         private void SubscribeForGameActions()
         {
             deck.OnDeckGenerated += OnDeckGenerated;
@@ -142,18 +131,44 @@ namespace Managament
 
         public void RestartGame()
         {
-            DoRestartGame();
-            //photonView.RPC(nameof(DoRestartGame), RpcTarget.All);
+            photonView.RPC(nameof(DoRestartGame), RpcTarget.All);
         }
         [PunRPC]
         public void DoRestartGame()
         {
+            UnsubscribeForGameActions();
+
             OnRestartGame?.Invoke();
         }
         #endregion
 
         #region Game-Networking
 
+        public List<PlayerWrapper> LocalInitilize(Table table, Deck deck, Hand player, Hand enemy)
+        {
+            this.table = table;
+            this.deck = deck;
+
+            players = new List<PlayerWrapper>()
+            {
+                new PlayerWrapper(PhotonNetwork.LocalPlayer.ActorNumber, player, PhotonNetwork.LocalPlayer.NickName, true),
+            };
+            if (PhotonNetwork.PlayerListOthers.Length > 0)
+            {
+                Player other = PhotonNetwork.PlayerListOthers[0];
+                players.Add(new PlayerWrapper(other.ActorNumber, enemy, other.NickName));
+            }
+            else
+            {
+                PhotonNetwork.OfflineMode = true;
+            }
+
+            players = players.OrderBy(x => x.Id).ToList();
+
+            SubscribeForGameActions();
+
+            return players;
+        }
         [PunRPC]
         public void DoClientInitilize(object[] info)
         {

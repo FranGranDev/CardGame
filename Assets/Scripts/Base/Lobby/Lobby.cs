@@ -6,6 +6,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
 using UI;
+using Data;
 using DG.Tweening;
 using UnityEngine.SceneManagement;
 
@@ -21,6 +22,14 @@ namespace Lobby
         [Header("UI Start Menu")]
         [SerializeField] private GameObject startPanel;
         [SerializeField] private TMP_InputField startInputName;
+        [Header("UI Stats Menu")]
+        [SerializeField] private GameObject statsPanel;
+        [SerializeField] private TextMeshProUGUI statsMatchesCount;
+        [SerializeField] private TextMeshProUGUI statsVictoryCount;
+        [SerializeField] private TextMeshProUGUI statsDefeatCount;
+        [SerializeField] private TextMeshProUGUI statsWinRate;
+        [SerializeField] private Transform matchesInfoContent;
+        [SerializeField] private UIMatchInfo matchInfoPrefab;
         [Header("UI Room List")]
         [SerializeField] private GameObject roomListPanel;
         [Header("UI Create Room")]
@@ -50,6 +59,7 @@ namespace Lobby
             RoomList,
             CreateRoom,
             WaitPlayers,
+            GameStats,
         }
         private Dictionary<PanelStateTypes, List<IUiBehavior>> statePanels;
         private Dictionary<PanelStateTypes, GameObject> stateObjects;
@@ -58,6 +68,12 @@ namespace Lobby
             {ButtonStateTypes.MakeNotReady, "Not Ready" },
             {ButtonStateTypes.MakeReady, "Make Ready!" },
             {ButtonStateTypes.StartGame, "Start Game!" },
+        };
+        private Dictionary<DataBase.MatchData.Types, string> matchTypeNames = new Dictionary<DataBase.MatchData.Types, string>()
+        {
+            {DataBase.MatchData.Types.Game, "Full Game" },
+            {DataBase.MatchData.Types.Surrender, "Surrender" },
+            {DataBase.MatchData.Types.Leave, "Leave" },
         };
         private Dictionary<int, bool> playersReady = new Dictionary<int, bool>();
         private PlayerLobbyItem selfItem;
@@ -107,6 +123,7 @@ namespace Lobby
             {PanelStateTypes.CreateRoom, createRoomPanel.GetComponentsInChildren<IUiBehavior>(true).ToList() },
             {PanelStateTypes.RoomList, roomListPanel.GetComponentsInChildren<IUiBehavior>(true).ToList() },
             {PanelStateTypes.WaitPlayers, waitingRoomPanel.GetComponentsInChildren<IUiBehavior>(true).ToList() },
+            {PanelStateTypes.GameStats, statsPanel.GetComponentsInChildren<IUiBehavior>(true).ToList() },
         };
             stateObjects = new Dictionary<PanelStateTypes, GameObject>()
             {
@@ -115,6 +132,7 @@ namespace Lobby
             {PanelStateTypes.CreateRoom, createRoomPanel.gameObject },
             {PanelStateTypes.RoomList, roomListPanel.gameObject },
             {PanelStateTypes.WaitPlayers, waitingRoomPanel.gameObject },
+            {PanelStateTypes.GameStats, statsPanel.gameObject },
             };
 
             foreach(List<IUiBehavior> panels in statePanels.Values)
@@ -132,7 +150,7 @@ namespace Lobby
         }
         private void SetupSettings()
         {
-            PhotonNetwork.NickName = PlayerPrefs.GetString("name", $"Player {Random.Range(10, 99)}");
+            PhotonNetwork.NickName = DataBase.Name;
 
             PhotonNetwork.AutomaticallySyncScene = true;
             PhotonNetwork.GameVersion = "1";
@@ -166,7 +184,7 @@ namespace Lobby
             switch(state)
             {
                 case PanelStateTypes.CreateRoom:
-                    roomInputName.text = $"Room " + Random.Range(1000, 9999);
+                    roomInputName.text = DataBase.Room;
                     break;
                 case PanelStateTypes.Start:
                     startInputName.text = PhotonNetwork.NickName;
@@ -188,19 +206,22 @@ namespace Lobby
 
         public void OnChangeNickName()
         {
-            PlayerPrefs.SetString("name", startInputName.text);
+            DataBase.Name = startInputName.text;
             PhotonNetwork.NickName = startInputName.text;
         }
-
+        public void JoinRandomRoom()
+        {
+            PhotonNetwork.JoinRandomRoom();
+        }
         public void GoCreateRoom()
         {
             PanelState = PanelStateTypes.CreateRoom;
         }
-        public void GoJoinRoom()
+        public void GoGameStats()
         {
-            //PhotonNetwork.JoinRandomRoom();
+            PanelState = PanelStateTypes.GameStats;
+            UpdateGameStats();
         }
-
         public void GoMainMenu()
         {
             PanelState = PanelStateTypes.Start;
@@ -208,13 +229,46 @@ namespace Lobby
 
         #endregion
 
-        #region RoomsList
+        #region Stats
 
-        //Coming soon
-
-        public void JoinRandomRoom()
+        public void UpdateGameStats()
         {
-            PhotonNetwork.JoinRandomRoom();
+            List<UIMatchInfo> all = new List<UIMatchInfo>(matchesInfoContent.GetComponentsInChildren<UIMatchInfo>());
+            foreach(UIMatchInfo obj in all)
+            {
+                Destroy(obj.gameObject);
+            }
+
+            IEnumerable<DataBase.MatchData> matches = DataBase.GetAllMatches;
+            matches.Reverse();
+
+            int count = 0;
+            int victory = 0;
+            int defeat = 0;
+            float kd = 0;
+
+            foreach (DataBase.MatchData match in matches)
+            {
+                UIMatchInfo info = Instantiate(matchInfoPrefab, matchesInfoContent);
+                info.Initilize(match.Winner, match.Looser, matchTypeNames[match.EndType], match.Victory);
+
+                count++;
+                if(match.Victory)
+                {
+                    victory++;
+                }
+                else
+                {
+                    defeat++;
+                }
+            }
+
+            kd = (float)victory / (float)(Mathf.Max(defeat, 1));
+
+            statsMatchesCount.text = count.ToString();
+            statsVictoryCount.text = victory.ToString();
+            statsDefeatCount.text = defeat.ToString();
+            statsWinRate.text = kd.ToString("00.00") + "%";
         }
 
         #endregion
@@ -223,11 +277,11 @@ namespace Lobby
 
         public void OnChangeRoomName()
         {
-
+            DataBase.Room = roomInputName.text;
         }
         public void CreateRoom()
         {
-            PhotonNetwork.CreateRoom(roomInputName.text, new Photon.Realtime.RoomOptions { MaxPlayers = 2 });
+            PhotonNetwork.CreateRoom(DataBase.Room, new Photon.Realtime.RoomOptions { MaxPlayers = 2 });
         }
 
         #endregion
