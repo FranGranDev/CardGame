@@ -27,6 +27,7 @@ namespace Cards
 
         private List<PlayerWrapper> players;
 
+        private Coroutine checkForEndCoroutine;
 
         private Dictionary<Vector2Int, PairPoint> pairPoints;
         private List<CardPair> currantPairs;
@@ -356,7 +357,7 @@ namespace Cards
 
         #region GameStates
 
-        public enum States { Idle, Game, Defended, NotDefended }
+        public enum States { Idle, Game, Defended, NotDefended, Ended }
         
 
         public void StartMove() //Send
@@ -380,6 +381,8 @@ namespace Cards
             deck.DealtCards();
             UpdatePlayersStates();
 
+            StartCheckEnd();
+
             OnNextMove?.Invoke(CurrantMove, Attacker, Defender);
         }
         public void NextMove() //Send
@@ -399,10 +402,38 @@ namespace Cards
                 OnNextMove?.Invoke(CurrantMove, Attacker, Defender);
             }
         }
+        private void StartCheckEnd()
+        {
+            if (checkForEndCoroutine != null)
+            {
+                StopCoroutine(checkForEndCoroutine);
+            }
+            checkForEndCoroutine = StartCoroutine(CheckForEndCour());
+        }
+        private IEnumerator CheckForEndCour()
+        {
+            var wait = new WaitForSeconds(0.5f);
+
+            while(true)
+            {
+                yield return wait;
+
+                if(Attacker.Hands.CardsCount == 0 && deck.CardsCount == 0)
+                {
+                    GameEnded(Attacker);
+                    yield break;
+                }
+                if (Defender.Hands.CardsCount == 0 && deck.CardsCount == 0)
+                {
+                    GameEnded(Defender);
+                    yield break;
+                }
+            }
+        }
+
+
         public void NextMove(int move, PlayerWrapper.Data attacker, PlayerWrapper.Data defender) //Accept
         {
-            Debug.Log("Next Move");
-
             CurrantMove = move;
             State = States.Game;
 
@@ -442,14 +473,13 @@ namespace Cards
                     break;
             }
 
-
             Attacker.PlayerState = PlayerWrapper.PlayerStates.Idle;
             Attacker.MoveState = PlayerWrapper.MoveStates.Idle;
 
             Defender.PlayerState = PlayerWrapper.PlayerStates.Idle;
             Defender.MoveState = PlayerWrapper.MoveStates.Idle;
 
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.5f);
 
             NextMove();
 
@@ -553,16 +583,20 @@ namespace Cards
             
         }
 
-        public void SelfLeave(PlayerWrapper self) //Send
+        public void SelfLeave(PlayerWrapper self)//Local
         {
+            State = States.Ended;
+
             PlayerWrapper winner = players.First(x => x.Id != self.Id);
 
             MatchData data = new MatchData(winner, self, currantMove, MatchData.EndTypes.Exit);
 
             GameEndedLocal(data);
         }
-        public void OtherLeave(PlayerWrapper self) //Send
+        public void OtherLeave(PlayerWrapper self)//Local
         {
+            State = States.Ended;
+
             PlayerWrapper looser = players.First(x => x.Id != self.Id);
 
             MatchData data = new MatchData(self, self, currantMove, MatchData.EndTypes.Exit);
@@ -577,9 +611,19 @@ namespace Cards
 
             OnGameEnded?.Invoke(data);
         }
+        public void GameEnded(PlayerWrapper winner) //Send
+        {
+            PlayerWrapper looser = players.First(x => x.Id != winner.Id);
+
+            MatchData data = new MatchData(winner, looser, currantMove, MatchData.EndTypes.Game);
+
+            OnGameEnded?.Invoke(data);
+        }
 
         public void GameEndedLocal(MatchData data) //Accept
         {
+            State = States.Ended;
+
             OnGameEndedLocal?.Invoke(data);
         }
 

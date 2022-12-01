@@ -62,7 +62,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.8485075, g: 0.50356007, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -239,7 +239,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: f26ad18237634854fb76794396f3535c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ff3dab5b19702d7448eeaa9a10e59db9, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -953,6 +953,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3434699891204742694, guid: b9f38bcbbc3e8dd46a7f71592ad4fafb, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4184131209188962995, guid: b9f38bcbbc3e8dd46a7f71592ad4fafb, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1037,6 +1041,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7268541277680828923, guid: b9f38bcbbc3e8dd46a7f71592ad4fafb, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7414895467758564810, guid: b9f38bcbbc3e8dd46a7f71592ad4fafb, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -1085,6 +1093,10 @@ PrefabInstance:
     - target: {fileID: 1586186258358454213, guid: b9f38bcbbc3e8dd46a7f71592ad4fafb, type: 3}
       propertyPath: m_text
       value: You lose
+      objectReference: {fileID: 0}
+    - target: {fileID: 3434699891204742694, guid: b9f38bcbbc3e8dd46a7f71592ad4fafb, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4184131209188962995, guid: b9f38bcbbc3e8dd46a7f71592ad4fafb, type: 3}
       propertyPath: m_Pivot.x
@@ -1182,10 +1194,18 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 4719577993910423234, guid: b9f38bcbbc3e8dd46a7f71592ad4fafb, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: c0042521c3c102049b7a2612df7c9ae1, type: 3}
+    - target: {fileID: 6311674835319245428, guid: b9f38bcbbc3e8dd46a7f71592ad4fafb, type: 3}
+      propertyPath: m_Color.b
+      value: 0.45639026
+      objectReference: {fileID: 0}
+    - target: {fileID: 6311674835319245428, guid: b9f38bcbbc3e8dd46a7f71592ad4fafb, type: 3}
+      propertyPath: m_Color.g
+      value: 0.5922155
+      objectReference: {fileID: 0}
+    - target: {fileID: 6311674835319245428, guid: b9f38bcbbc3e8dd46a7f71592ad4fafb, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7268541277680828923, guid: b9f38bcbbc3e8dd46a7f71592ad4fafb, type: 3}
       propertyPath: m_IsActive
       value: 0

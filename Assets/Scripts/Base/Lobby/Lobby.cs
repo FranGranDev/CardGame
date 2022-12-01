@@ -240,7 +240,6 @@ namespace Lobby
             }
 
             IEnumerable<DataBase.MatchData> matches = DataBase.GetAllMatches;
-            matches.Reverse();
 
             int count = 0;
             int victory = 0;
@@ -263,7 +262,7 @@ namespace Lobby
                 }
             }
 
-            kd = (float)victory / (float)(Mathf.Max(defeat, 1));
+            kd = (float)victory / (float)(Mathf.Max(count, 1)) * 100;
 
             statsMatchesCount.text = count.ToString();
             statsVictoryCount.text = victory.ToString();

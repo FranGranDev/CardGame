@@ -188,6 +188,7 @@ namespace Managament
 
         private void Update()
         {
+#if UNITY_EDITOR
             if (Input.GetKeyDown(KeyCode.S))
             {
                 localPlayer = !localPlayer;
@@ -200,6 +201,7 @@ namespace Managament
             {
                 RestartGame();
             }
+#endif
         }
         private void OnApplicationQuit()
         {

@@ -35,6 +35,10 @@ namespace Cards
                 return null;
             }
         }
+        public int CardsCount
+        {
+            get => CardsData.Count;
+        }
         public List<CardInfo> CardsData
         {
             get => cardsData;

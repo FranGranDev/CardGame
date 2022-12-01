@@ -18,6 +18,7 @@ namespace TouchInput
 
         private bool touched;
         private Vector3 startTapPosition;
+        private Vector3 currantTapPosition;
 
         private void MouseInput()
         {
@@ -25,10 +26,29 @@ namespace TouchInput
             {
                 OnStartTap(Input.mousePosition);
             }
+            if(touched)
+            {
+                currantTapPosition = Input.mousePosition;
+            }
 
             if (touched && Input.GetMouseButtonUp(0))
             {
                 OnEndTap(Input.mousePosition);
+            }
+        }
+        private void ScreenInput()
+        {
+            if (!touched && Input.touchCount > 0)
+            {
+                OnStartTap(Input.touches[0].position);
+            }
+            if(touched && Input.touchCount > 0)
+            {
+                currantTapPosition = Input.touches[0].position;
+            }
+            if (touched && Input.touchCount == 0)
+            {
+                OnEndTap(currantTapPosition);
             }
         }
         private void InputExecute()
@@ -38,7 +58,7 @@ namespace TouchInput
                 switch (state)
                 {
                     case StateTypes.Drag:
-                        OnDrag?.Invoke(new TapInfo(0, startTapPosition, Input.mousePosition, state));
+                        OnDrag?.Invoke(new TapInfo(0, startTapPosition, currantTapPosition, state));
                         break;
                 }
             }
@@ -48,7 +68,7 @@ namespace TouchInput
         {
             float time = 0;
 
-            while ((startTapPosition - Input.mousePosition).magnitude < MIN_DST_FOR_DRAG && time < MIN_TIME_FOR_DRAG)
+            while ((startTapPosition - currantTapPosition).magnitude < MIN_DST_FOR_DRAG && time < MIN_TIME_FOR_DRAG)
             {
                 if (!touched)
                 {
@@ -59,12 +79,13 @@ namespace TouchInput
             }
 
             state = StateTypes.Drag;
-            OnStartDrag?.Invoke(new TapInfo(0, startTapPosition, Input.mousePosition, state));
+            OnStartDrag?.Invoke(new TapInfo(0, startTapPosition, currantTapPosition, state));
             yield break;
         }
         private void OnStartTap(Vector2 position)
         {
             startTapPosition = position;
+            currantTapPosition = position;
             state = StateTypes.StartTap;
             touched = true;
 
@@ -88,7 +109,12 @@ namespace TouchInput
 
         private void Update()
         {
+#if UNITY_EDITOR || UNITY_STANDALONE_WIN
             MouseInput();
+#else
+            ScreenInput();
+#endif
+
         }
         private void FixedUpdate()
         {
