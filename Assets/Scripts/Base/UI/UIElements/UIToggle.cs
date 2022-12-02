@@ -8,8 +8,8 @@ namespace UI
     {
         [Header("Toggle Settings")]
         [SerializeField] private Image icon;
-        [SerializeField] private Sprite sound;
-        [SerializeField] private Sprite noSound;
+        [SerializeField] private Sprite spriteOn;
+        [SerializeField] private Sprite spriteOff;
 
         [SerializeField] private UIClick onAnimation;
         [SerializeField] private UIClick offAnimation;
@@ -37,7 +37,7 @@ namespace UI
 
         private void SetIcon()
         {
-            Sprite sprite = value ? noSound : sound;
+            Sprite sprite = value ? spriteOff : spriteOn;
             icon.sprite = sprite;
         }
         private void PlayAnimation()

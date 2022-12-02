@@ -7,7 +7,7 @@ namespace UI
     {
         public UIClickScale(Transform panel, float value, float duration, int vibration, Ease ease) : base(panel, value, duration, vibration, ease)
         {
-            localScale = panel.localScale;
+            localScale = Vector3.one;
         }
 
         private bool isPlaying;

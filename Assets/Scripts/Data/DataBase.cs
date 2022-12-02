@@ -13,9 +13,20 @@ public class DataBase : MonoBehaviour
     private const string GAME_IS_VICTORY = "is_victory_";
     private const string GAME_MOVES_COUNT = "moves_count_";
     private const string GAME_END_TYPE = "game_end_type_";
-
+    //Lobby
     private const string LOBBY_NAME = "name";
     private const string LOBBY_ROOM = "room";
+    //Language
+    private const string LANGUAGE_CURRANT = "language";
+    #endregion
+
+    #region Localization
+
+    public static string Language
+    {
+        get => PlayerPrefs.GetString(LANGUAGE_CURRANT, "en_US");
+        set => PlayerPrefs.SetString(LANGUAGE_CURRANT, value);
+    }
 
     #endregion
 

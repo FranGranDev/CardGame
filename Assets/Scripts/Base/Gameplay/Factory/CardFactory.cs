@@ -8,6 +8,10 @@ namespace Cards.Data
         [SerializeField] private CardVisualData data;
 
 
+        public Sprite GetSuitImage(DurakCard.SuitTypes suit)
+        {
+            return data.SuitIcons[(int)suit];
+        }
         public DurakCard CreateCard(int index, DurakCard.SuitTypes suit)
         {
             DurakCard card = Instantiate(data.Prefab);

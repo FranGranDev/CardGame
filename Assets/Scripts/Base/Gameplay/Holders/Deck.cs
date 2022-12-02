@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using Cards.Data;
+using TMPro;
 
 
 namespace Cards
@@ -12,6 +13,8 @@ namespace Cards
         private const int MAX_CARD_INDEX = 9;
 
         [Header("Components")]
+        [SerializeField] private SpriteRenderer trumpSprite;
+        [SerializeField] private TextMeshPro remainingText;
         [SerializeField] private Transform cardPlace;
         [SerializeField] private Transform trumpPlace;
 
@@ -96,6 +99,7 @@ namespace Cards
         {
             cardsObjects = new Dictionary<CardInfo, Card>();
 
+
             Vector3 offset = Vector3.zero;
             foreach(CardInfo info in cardsData)
             {
@@ -114,6 +118,11 @@ namespace Cards
             trump.transform.SetParent(trumpPlace);
             trump.transform.localPosition = Vector3.zero;
             trump.transform.localRotation = Quaternion.identity;
+
+
+            trumpSprite.sprite = cardFactory.GetSuitImage((DurakCard.SuitTypes)cardsData[0].suit);
+            remainingText.text = CardsCount.ToString();
+            remainingText.gameObject.SetActive(true);
         }
 
         public void DealtCards()
@@ -158,6 +167,16 @@ namespace Cards
 
                 cardsData.Remove(info);
                 cardsObjects.Remove(info);
+
+
+                if(CardsCount <= 0)
+                {
+                    remainingText.gameObject.SetActive(false);
+                }
+                else
+                {
+                    remainingText.text = CardsCount.ToString();
+                }
             }
         }
     }

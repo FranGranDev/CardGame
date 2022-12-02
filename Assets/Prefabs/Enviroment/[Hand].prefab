@@ -140,6 +140,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97305c59f136bdb499db21aa906a344d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cards: []
+  player:
+    local: 0
+    id: 0
+    name: 
+    hands: {fileID: 0}
+    moveState: 0
+    playerState: 0
+    online: 0
+    ready: 0
   placeCurve:
     serializedVersion: 2
     m_Curve:
@@ -202,7 +212,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6644681540002980376}
   m_LocalRotation: {x: 0, y: -0.3420201, z: 0, w: 0.9396927}
-  m_LocalPosition: {x: -15, y: 0, z: -0}
+  m_LocalPosition: {x: -13, y: 0, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6644681540540272155}
@@ -313,7 +323,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6644681540195892967}
   m_LocalRotation: {x: 0, y: 0.3420201, z: 0, w: 0.9396927}
-  m_LocalPosition: {x: 14, y: 0, z: -0}
+  m_LocalPosition: {x: 13, y: 0, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6644681540540272155}
@@ -374,7 +384,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6644681540592700421}
-  m_LocalRotation: {x: -0.38268343, y: 0, z: 0, w: 0.92387956}
+  m_LocalRotation: {x: -0.3420201, y: 0, z: 0, w: 0.9396927}
   m_LocalPosition: {x: 0, y: 6.29, z: 11.72}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:

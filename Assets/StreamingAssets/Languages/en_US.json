@@ -1,0 +1,27 @@
+{
+  "Lobby": {
+    "EnterPlayerName": "Enter Name",
+    "PlayerName": "Player Name",
+    "CreateRoom": "Create Room",
+    "JoinRandomRoom": "Join Random Room",
+    "Stats": "Stats",
+
+    "EnterText": "Enter Text",
+    "Loading": "Loading",
+
+    "RoomName": "Room Name",
+    "Create": "Create",
+    "Back": "Back",
+
+    "Ready": "Ready",
+    "StartGame": "Start Game",
+    "Leave": "Leave",
+
+    "GameStats": "Game Stats",
+    "MatchcesCount": "Matchces Count",
+    "Victories": "Victories",
+    "Defeats": "Defeats",
+    "WinRate": "WinRate",
+    "LastMatches": "Last Matches"
+  }
+}   

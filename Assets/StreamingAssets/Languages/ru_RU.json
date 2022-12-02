@@ -1,0 +1,27 @@
+{
+  "Lobby": {
+    "EnterPlayerName": "Введите имя",
+    "PlayerName": "Имя игрока",
+    "CreateRoom": "Создать лобби",
+    "JoinRandomRoom": "Присоединиться к лобби",
+    "Stats": "Рейтинг",
+
+    "EnterText": "Введите текст",
+    "Loading": "Загрузка",
+
+    "RoomName": "Имя комнаты",
+    "Create": "Создать",
+    "Back": "Назад",
+
+    "Ready": "Готов",
+    "StartGame": "Начать игру",
+    "Leave": "Покинуть",
+
+    "GameStats": "Игровые показатели",
+    "MatchcesCount": "Количество матчей",
+    "Victories": "Побед",
+    "Defeats": "Поражений",
+    "WinRate": "Процент побед",
+    "LastMatches": "Последние игры"
+  }
+}   

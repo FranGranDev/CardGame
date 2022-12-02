@@ -51,6 +51,7 @@ namespace UI
                     break;
                 case States.NotReady:
                     readyButtonText.text = "I am Ready";
+                    readyButton.interactable = true;
                     readyButtonPanel.IsShown = true;
                     rematchButtonPanel.IsShown = false;
                     break;

@@ -15,11 +15,14 @@ namespace Lobby
 {
     public class Lobby : MonoBehaviourPunCallbacks
     {
+        [Header("Links")]
+        [SerializeField] private LocalizationController localizationController;
         [Header("UI Static")]
         [SerializeField] private UIPanel noInternetPanel;
         [Header("UI Loading")]
         [SerializeField] private GameObject loadingPanel;
         [Header("UI Start Menu")]
+        [SerializeField] private UILanguageChanger languageChanger;
         [SerializeField] private GameObject startPanel;
         [SerializeField] private TMP_InputField startInputName;
         [Header("UI Stats Menu")]
@@ -142,12 +145,15 @@ namespace Lobby
                     panel.Initilize();
                 }
             }
-
             foreach(GameObject obj in stateObjects.Values)
             {
                 obj.SetActive(false);
             }
+
+            languageChanger.OnChanged += SetNextLanguage;
+            localizationController.SetLanguage(DataBase.Language, LocalizationController.SubLocalization.Lobby);
         }
+
         private void SetupSettings()
         {
             PhotonNetwork.NickName = DataBase.Name;
@@ -225,6 +231,24 @@ namespace Lobby
         public void GoMainMenu()
         {
             PanelState = PanelStateTypes.Start;
+        }
+
+
+        private void SetNextLanguage()
+        {
+            int currant = Localization.AllLanguages.IndexOf(DataBase.Language);
+            if(currant >= Localization.AllLanguages.Count - 1)
+            {
+                currant = 0;
+            }
+            else
+            {
+                currant++;
+            }
+
+            DataBase.Language = Localization.AllLanguages[currant];
+
+            localizationController.SetLanguage(DataBase.Language, LocalizationController.SubLocalization.Lobby);
         }
 
         #endregion

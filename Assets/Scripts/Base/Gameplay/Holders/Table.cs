@@ -7,6 +7,9 @@ namespace Cards
 {
     public class Table : MonoBehaviour, ICardHolder, ICardVisitor
     {
+        private const int sizeX = 2;
+        private const int sizeY = 2;
+
         [Header("States")]
         [SerializeField] private States state;
         [SerializeField] private int currantMove = 0;
@@ -130,12 +133,12 @@ namespace Cards
         {
             currantPairs = new List<CardPair>();
             pairPoints = new Dictionary<Vector2Int, PairPoint>();
-            for (int y = 0; y < 3; y++)
+            for (int y = 0; y < sizeY; y++)
             {
-                for (int x = 0; x < 3; x++)
+                for (int x = 0; x < sizeX; x++)
                 {
                     GameObject point = new GameObject($"{x}:{y}");
-                    point.transform.position = new Vector3(x * 16 - 16, 0.1f, y * 18 - 18);
+                    point.transform.position = new Vector3(x * 18 - 9, 0.1f, y * 20 - 11);
                     point.transform.parent = pointsPlace;
 
                     Vector2Int key = new Vector2Int(x, y);
@@ -207,7 +210,7 @@ namespace Cards
         {
             Debug.Log($"C: {player.Hands.Cards.Count} | {info.index}  {info.suit}");
             Card card = player.Hands.Cards.First(x => x.Info.Equals(info));
-            pointKey = new Vector2Int(2, 2) - pointKey;
+            pointKey = new Vector2Int(sizeX - 1, sizeY - 1) - pointKey;
             PairPoint point = pairPoints[pointKey];
 
             card.OnDropped?.Invoke(card);
@@ -599,7 +602,7 @@ namespace Cards
 
             PlayerWrapper looser = players.First(x => x.Id != self.Id);
 
-            MatchData data = new MatchData(self, self, currantMove, MatchData.EndTypes.Exit);
+            MatchData data = new MatchData(self, looser, currantMove, MatchData.EndTypes.Exit);
 
             GameEndedLocal(data);
         }
