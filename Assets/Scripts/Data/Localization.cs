@@ -74,6 +74,7 @@ public static class Localization
 public class LanguageData
 {
     public LobbyData Lobby;
+    public GameData Game;
 }
 
 [System.Serializable]
@@ -107,4 +108,25 @@ public struct LobbyData
     public string Defeats;
     public string WinRate;
     public string LastMatches;
+}
+
+[System.Serializable]
+public struct GameData
+{
+    public string Pass;
+    public string EnemyTurn;
+    public string YourTurn;
+    public string Take;
+    public string Done;
+    public string Winner;
+    public string Looser;
+    public string MoveCount;
+    public string Exit;
+    public string Ready;
+    public string Wait;
+    public string WaitOthers;
+    public string IamReady;
+    public string PlayAgain;
+    public string YouWin;
+    public string YouLose;
 }

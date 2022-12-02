@@ -7,9 +7,9 @@ namespace UI
 {
     public class LocalizationController : MonoBehaviour
     {
-        public enum SubLocalization { Lobby, Game}
+        public enum Place { Lobby, Game}
 
-        public void SetLanguage(string language, SubLocalization place)
+        public void SetLanguage(string language, Place place)
         {
             List<LocalizationItem> items = new List<LocalizationItem>(GetComponentsInChildren<LocalizationItem>(true));
 
@@ -26,13 +26,13 @@ namespace UI
             });
         }
 
-        private void SetupItem(LocalizationItem item, LanguageData data, SubLocalization place)
+        private void SetupItem(LocalizationItem item, LanguageData data, Place place)
         {
             try
             {
                 switch (place)
                 {
-                    case SubLocalization.Lobby:
+                    case Place.Lobby:
                         item.SetText((string)data.Lobby.GetType().GetField(item.FieldName).GetValue(data.Lobby));
                         break;
                 }

@@ -23,5 +23,24 @@
     "Defeats": "Defeats",
     "WinRate": "WinRate",
     "LastMatches": "Last Matches"
+  },
+  "Game": {
+    "Pass": "Pass",
+    "EnemyTurn": "Enemy Turn",
+    "YourTurn": "Your Turn",
+    "Take": "Take",
+    "Done": "Done",
+
+    "Winner": "Winner",
+    "Looser": "Looser",
+    "MoveCount": "Move count",
+    "Exit": "Exit",
+    "Ready": "Ready",
+    "Wait": "Wait",
+    "WaitOthers": "Wait others",
+    "IamReady": "I am Ready",
+    "PlayAgain": "Play Again",
+    "YouWin": "You win",
+    "You lose": "You lose"
   }
 }   

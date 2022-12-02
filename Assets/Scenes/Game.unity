@@ -248,6 +248,7 @@ GameObject:
   m_Component:
   - component: {fileID: 655886458}
   - component: {fileID: 655886459}
+  - component: {fileID: 655886460}
   m_Layer: 0
   m_Name: '[Main]'
   m_TagString: Untagged
@@ -288,6 +289,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currantState: 0
   hostController: {fileID: 245933672}
+  localizationController: {fileID: 655886460}
   table: {fileID: 1236355974}
   playerCamera: {fileID: 1966234290}
   player: {fileID: 670595038}
@@ -298,6 +300,18 @@ MonoBehaviour:
   discardPile: {fileID: 360977650}
   cardFactory: {fileID: 860875163}
   players: []
+--- !u!114 &655886460
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 655886457}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 584e78cc7f54af04988cf9dfc9ac7d7b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &670595038 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6644681539150448089, guid: 3c3804b967243324f9eac52eb1fc0f84, type: 3}

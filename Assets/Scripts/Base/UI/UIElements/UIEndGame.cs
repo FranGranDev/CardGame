@@ -50,25 +50,25 @@ namespace UI
                     rematchButtonPanel.IsShown = false;
                     break;
                 case States.NotReady:
-                    readyButtonText.text = "I am Ready";
+                    readyButtonText.text = Localization.CurrantData.Game.IamReady;
                     readyButton.interactable = true;
                     readyButtonPanel.IsShown = true;
                     rematchButtonPanel.IsShown = false;
                     break;
                 case States.IamReady:
-                    readyButtonText.text = "Wait others";
+                    readyButtonText.text = Localization.CurrantData.Game.WaitOthers;
                     readyButtonPanel.IsShown = true;
                     readyButton.interactable = false;
                     rematchButtonPanel.IsShown = false;
                     break;
                 case States.Rematch:
-                    rematchButtonText.text = "Rematch";
+                    rematchButtonText.text = Localization.CurrantData.Game.PlayAgain;
                     rematchButton.interactable = true;
                     readyButtonPanel.IsShown = false;
                     rematchButtonPanel.IsShown = true;
                     break;
                 case States.WaitForPlayers:
-                    rematchButtonText.text = "Wait others";
+                    rematchButtonText.text = Localization.CurrantData.Game.Wait;
                     rematchButton.interactable = false;
                     readyButtonPanel.IsShown = false;
                     rematchButtonPanel.IsShown = true;

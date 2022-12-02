@@ -565,6 +565,9 @@ namespace Cards
                                 OnEndMove?.Invoke(States.Defended);
                             }
                             break;
+                        case PlayerWrapper.MoveStates.Pass:
+                            OnEndMove?.Invoke(States.NotDefended);
+                            break;
                     }
 
                     break;
@@ -573,8 +576,12 @@ namespace Cards
                     other = Attacker;
                     switch (player.MoveState)
                     {
-                        case PlayerWrapper.MoveStates.Playing: //Take Cards
-                            if(currantPairs.Count(x => !x.Done) > 0)
+                        case PlayerWrapper.MoveStates.Playing: //Pass
+                            Defender.MoveState = PlayerWrapper.MoveStates.Pass;
+                            Attacker.MoveState = PlayerWrapper.MoveStates.Pass;
+                            break;
+                        case PlayerWrapper.MoveStates.Pass: //Take Cards
+                            if (currantPairs.Count(x => !x.Done) > 0)
                             {
                                 OnEndMove?.Invoke(States.NotDefended);
                             }

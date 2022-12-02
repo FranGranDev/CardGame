@@ -158,27 +158,26 @@ namespace UI
                         case PlayerWrapper.MoveStates.Idle:
                             button.interactable = false;
                             IsMainButtonsShown = false;
-                            buttonText.text = "Wait";
                             break;
                         case PlayerWrapper.MoveStates.Playing:
                             button.interactable = true;
                             IsMainButtonsShown = true;
-                            buttonText.text = "Done";
+                            buttonText.text = Localization.CurrantData.Game.Done;
                             break;
                         case PlayerWrapper.MoveStates.Pass:
                             button.interactable = true;
                             IsMainButtonsShown = true;
-                            buttonText.text = "Pass";
+                            buttonText.text = Localization.CurrantData.Game.Pass;
                             break;
                         case PlayerWrapper.MoveStates.FirstMove:
                             button.interactable = false;
                             IsMainButtonsShown = true;
-                            buttonText.text = "Your turn";
+                            buttonText.text = Localization.CurrantData.Game.YourTurn;
                             break;
                         case PlayerWrapper.MoveStates.EnemyMove:
                             button.interactable = false;
                             IsMainButtonsShown = true;
-                            buttonText.text = "Enemy turn";
+                            buttonText.text = Localization.CurrantData.Game.EnemyTurn;
                             break;
                     }
                     break;
@@ -188,12 +187,11 @@ namespace UI
                         case PlayerWrapper.MoveStates.Idle:
                             button.interactable = false;
                             IsMainButtonsShown = false;
-                            buttonText.text = "Wait";
                             break;
                         case PlayerWrapper.MoveStates.Playing:
                             button.interactable = true;
                             IsMainButtonsShown = true;
-                            buttonText.text = "Take";
+                            buttonText.text = Localization.CurrantData.Game.Take;
                             break;
                         case PlayerWrapper.MoveStates.Pass:
                             button.interactable = false;
@@ -202,19 +200,19 @@ namespace UI
                         case PlayerWrapper.MoveStates.FirstMove:
                             button.interactable = false;
                             IsMainButtonsShown = true;
-                            buttonText.text = "Enemy turn";
+                            buttonText.text = Localization.CurrantData.Game.EnemyTurn;
                             break;
                         case PlayerWrapper.MoveStates.EnemyMove:
                             button.interactable = false;
                             IsMainButtonsShown = true;
-                            buttonText.text = "Enemy turn";
+                            buttonText.text = Localization.CurrantData.Game.EnemyTurn;
                             break;
                     }
                     break;
                 case PlayerWrapper.PlayerStates.Idle:
                     button.interactable = false;
                     IsMainButtonsShown = false;
-                    buttonText.text = "Wait";
+                    buttonText.text = Localization.CurrantData.Game.Wait;
                     break;
             }
         }

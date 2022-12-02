@@ -282,13 +282,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: UI | Leave
   show:
-    time: 0.75
+    time: 0.5
     delay: 0.3
-    ease: 4
+    ease: 13
   hide:
     time: 0.5
     delay: 0
-    ease: 4
+    ease: 10
   panel: {fileID: 8079484994447784830}
   checkIAddictive: 0
   uiAnimations: 01000000
@@ -799,13 +799,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: UI | CreateRoom
   show:
-    time: 0.75
+    time: 0.5
     delay: 0.3
-    ease: 4
+    ease: 13
   hide:
     time: 0.5
     delay: 0
-    ease: 4
+    ease: 10
   panel: {fileID: 695867535872051490}
   checkIAddictive: 0
   uiAnimations: 01000000
@@ -865,11 +865,11 @@ MonoBehaviour:
   show:
     time: 0.5
     delay: 0
-    ease: 4
+    ease: 13
   hide:
     time: 0.5
     delay: 0
-    ease: 4
+    ease: 10
   panel: {fileID: 905270431118386953}
   checkIAddictive: 1
   uiAnimations: 01000000
@@ -1078,13 +1078,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: UI | PlayerName
   show:
-    time: 0.75
+    time: 0.5
     delay: 0.25
-    ease: 4
+    ease: 13
   hide:
     time: 0.5
     delay: 0
-    ease: 4
+    ease: 10
   panel: {fileID: 1749281809154008973}
   checkIAddictive: 1
   uiAnimations: 01000000
@@ -1190,11 +1190,11 @@ MonoBehaviour:
   show:
     time: 0.5
     delay: 0
-    ease: 4
+    ease: 13
   hide:
     time: 0.5
     delay: 0
-    ease: 4
+    ease: 10
   panel: {fileID: 478735846898969628}
   checkIAddictive: 1
   uiAnimations: 01000000
@@ -1465,13 +1465,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: UI | PlayersList
   show:
-    time: 0.75
+    time: 0.5
     delay: 0.25
-    ease: 4
+    ease: 13
   hide:
     time: 0.5
     delay: 0
-    ease: 4
+    ease: 10
   panel: {fileID: 773204497491718372}
   checkIAddictive: 1
   uiAnimations: 01000000
@@ -2044,13 +2044,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: UI | JoinRandomRoom
   show:
-    time: 0.75
+    time: 0.5
     delay: 0.3
-    ease: 4
+    ease: 13
   hide:
     time: 0.5
     delay: 0
-    ease: 4
+    ease: 10
   panel: {fileID: 7264293012450037326}
   checkIAddictive: 0
   uiAnimations: 01000000
@@ -2204,13 +2204,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: UI | CreateRoom
   show:
-    time: 0.75
+    time: 0.5
     delay: 0.3
-    ease: 4
+    ease: 13
   hide:
     time: 0.5
     delay: 0
-    ease: 4
+    ease: 10
   panel: {fileID: 3425508232328146982}
   checkIAddictive: 0
   uiAnimations: 01000000
@@ -2514,13 +2514,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: UI | Back
   show:
-    time: 0.75
+    time: 0.5
     delay: 0.3
-    ease: 4
+    ease: 13
   hide:
     time: 0.5
     delay: 0
-    ease: 4
+    ease: 10
   panel: {fileID: 3727383768677390233}
   checkIAddictive: 0
   uiAnimations: 01000000
@@ -2807,13 +2807,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: UI | Flags
   show:
-    time: 0.25
+    time: 0.5
     delay: 0
-    ease: 4
+    ease: 13
   hide:
-    time: 0.25
+    time: 0.5
     delay: 0
-    ease: 4
+    ease: 10
   panel: {fileID: 1061792660979002854}
   checkIAddictive: 1
   uiAnimations: 01000000
@@ -3158,13 +3158,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: UI | Back
   show:
-    time: 0.75
+    time: 0.5
     delay: 0.3
-    ease: 4
+    ease: 13
   hide:
     time: 0.5
     delay: 0
-    ease: 4
+    ease: 10
   panel: {fileID: 5999024483701026843}
   checkIAddictive: 0
   uiAnimations: 01000000
@@ -3926,13 +3926,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: UI | Icon
   show:
-    time: 0.75
+    time: 0.5
     delay: 0.3
-    ease: 4
+    ease: 13
   hide:
     time: 0.5
     delay: 0
-    ease: 4
+    ease: 10
   panel: {fileID: 7741705607371562306}
   checkIAddictive: 0
   uiAnimations: 0000000001000000
@@ -4643,13 +4643,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: UI | CreateRoom
   show:
-    time: 0.75
+    time: 0.5
     delay: 0.3
-    ease: 4
+    ease: 13
   hide:
     time: 0.5
     delay: 0
-    ease: 4
+    ease: 10
   panel: {fileID: 5747396938544108190}
   checkIAddictive: 0
   uiAnimations: 01000000
@@ -4982,13 +4982,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: UI | Stats
   show:
-    time: 0.75
+    time: 0.5
     delay: 0.3
-    ease: 4
+    ease: 13
   hide:
     time: 0.5
     delay: 0
-    ease: 4
+    ease: 10
   panel: {fileID: 5747396939496310418}
   checkIAddictive: 0
   uiAnimations: 01000000
@@ -6163,13 +6163,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: UI | Ready
   show:
-    time: 0.75
+    time: 0.5
     delay: 0.3
-    ease: 4
+    ease: 13
   hide:
     time: 0.5
     delay: 0
-    ease: 4
+    ease: 10
   panel: {fileID: 8653372632130940970}
   checkIAddictive: 0
   uiAnimations: 01000000
@@ -6660,13 +6660,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: UI | RoomName
   show:
-    time: 0.75
+    time: 0.5
     delay: 0.25
-    ease: 4
+    ease: 13
   hide:
     time: 0.5
     delay: 0
-    ease: 4
+    ease: 10
   panel: {fileID: 4262973679077523429}
   checkIAddictive: 1
   uiAnimations: 01000000
@@ -6927,13 +6927,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: UI | Image
   show:
-    time: 0
+    time: 0.5
     delay: 0
-    ease: 4
+    ease: 13
   hide:
     time: 0.5
     delay: 0
-    ease: 4
+    ease: 10
   panel: {fileID: 1615632635197180252}
   checkIAddictive: 1
   uiAnimations: 01000000
@@ -7032,11 +7032,11 @@ MonoBehaviour:
   show:
     time: 0.5
     delay: 0
-    ease: 4
+    ease: 13
   hide:
     time: 0.5
     delay: 0
-    ease: 4
+    ease: 10
   panel: {fileID: 2349462575631452445}
   checkIAddictive: 1
   uiAnimations: 01000000
@@ -7366,13 +7366,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: UI | RoomName
   show:
-    time: 0.75
+    time: 0.5
     delay: 0.25
-    ease: 4
+    ease: 13
   hide:
     time: 0.5
     delay: 0
-    ease: 4
+    ease: 10
   panel: {fileID: 6428019822163008097}
   checkIAddictive: 1
   uiAnimations: 01000000
@@ -7496,13 +7496,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: UI | Image_1
   show:
-    time: 0
+    time: 0.5
     delay: 0
-    ease: 4
+    ease: 13
   hide:
     time: 0.5
     delay: 0
-    ease: 4
+    ease: 10
   panel: {fileID: 2886195679545860110}
   checkIAddictive: 1
   uiAnimations: 01000000
@@ -7807,13 +7807,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: UI | SoundOn
   show:
-    time: 0.25
+    time: 0.5
     delay: 0
-    ease: 4
+    ease: 13
   hide:
-    time: 0.25
+    time: 0.5
     delay: 0
-    ease: 4
+    ease: 10
   panel: {fileID: 5410319502045445559}
   checkIAddictive: 1
   uiAnimations: 01000000
@@ -8032,13 +8032,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: UI | Loading
   show:
-    time: 0
+    time: 0.5
     delay: 0
-    ease: 4
+    ease: 13
   hide:
     time: 0.5
     delay: 0
-    ease: 4
+    ease: 10
   panel: {fileID: 1300139755629840261}
   checkIAddictive: 1
   uiAnimations: 01000000

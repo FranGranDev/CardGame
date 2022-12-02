@@ -16,6 +16,7 @@ namespace Managament
         [SerializeField] private States currantState;
         [Header("Links")]
         [SerializeField] private HostController hostController;
+        [SerializeField] private LocalizationController localizationController;
         [Space]
         [SerializeField] private Table table;
         [SerializeField] private PlayerCamera playerCamera;
@@ -58,6 +59,8 @@ namespace Managament
             playerUI.OnReady += Ready;
             playerUI.OnSurrender += Surrender;
             playerUI.OnExit += Exit;
+
+            localizationController.SetLanguage(DataBase.Language, LocalizationController.Place.Game);
         }
         private void Start()
         {

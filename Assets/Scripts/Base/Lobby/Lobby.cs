@@ -151,7 +151,7 @@ namespace Lobby
             }
 
             languageChanger.OnChanged += SetNextLanguage;
-            localizationController.SetLanguage(DataBase.Language, LocalizationController.SubLocalization.Lobby);
+            localizationController.SetLanguage(DataBase.Language, LocalizationController.Place.Lobby);
         }
 
         private void SetupSettings()
@@ -248,7 +248,7 @@ namespace Lobby
 
             DataBase.Language = Localization.AllLanguages[currant];
 
-            localizationController.SetLanguage(DataBase.Language, LocalizationController.SubLocalization.Lobby);
+            localizationController.SetLanguage(DataBase.Language, LocalizationController.Place.Lobby);
         }
 
         #endregion
