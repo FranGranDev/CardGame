@@ -195,7 +195,8 @@ namespace UI
                             break;
                         case PlayerWrapper.MoveStates.Pass:
                             button.interactable = false;
-                            IsMainButtonsShown = false;
+                            IsMainButtonsShown = true;
+                            buttonText.text = Localization.CurrantData.Game.Wait;
                             break;
                         case PlayerWrapper.MoveStates.FirstMove:
                             button.interactable = false;

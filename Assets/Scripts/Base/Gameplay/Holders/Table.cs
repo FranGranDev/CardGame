@@ -263,8 +263,6 @@ namespace Cards
                 if(point.CanPutAttack && (firstMove || canPut))
                 {
                     OnCardPlaced?.Invoke(point, card);
-                    Attacker.MoveState = PlayerWrapper.MoveStates.Playing;
-                    Defender.MoveState = PlayerWrapper.MoveStates.Playing;
                     PlaceAttackCard(point, card, ICardAnimation.Types.MoveTo, 0.25f);
                 }
                 else
@@ -279,8 +277,6 @@ namespace Cards
                 if (point.CanPutDefend && point.Pair.CanBeat(card))
                 {
                     OnCardPlaced?.Invoke(point, card);
-                    Attacker.MoveState = PlayerWrapper.MoveStates.Playing;
-                    Defender.MoveState = PlayerWrapper.MoveStates.Playing;
                     PlaceDefendCard(point, card, ICardAnimation.Types.MoveTo, 0.25f);
                 }
                 else
@@ -520,6 +516,10 @@ namespace Cards
                 Defender.MoveState = PlayerWrapper.MoveStates.FirstMove;
                 return;
             }
+            if (Attacker.MoveState == PlayerWrapper.MoveStates.Pass || Defender.MoveState == PlayerWrapper.MoveStates.Pass)
+                return;
+            Attacker.MoveState = PlayerWrapper.MoveStates.Playing;
+
             if (pairPoints.Values.Count(x => x.CanPutDefend) > 0)
             {
                 Defender.MoveState = PlayerWrapper.MoveStates.Playing;
