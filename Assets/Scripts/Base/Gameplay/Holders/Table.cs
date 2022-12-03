@@ -529,14 +529,6 @@ namespace Cards
                 Defender.MoveState = PlayerWrapper.MoveStates.EnemyMove;
             }
         }
-        public void UpdatePlayersStates(PlayerWrapper.Data attacker, PlayerWrapper.Data defender) //Accept
-        {
-            Attacker.MoveState = attacker.moveState;
-            Attacker.PlayerState = attacker.playerState;
-
-            Defender.MoveState = defender.moveState;
-            Defender.PlayerState = defender.playerState;
-        }
         private void SwapPlayers()
         {
             PlayerWrapper temp = Attacker;

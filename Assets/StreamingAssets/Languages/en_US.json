@@ -14,6 +14,7 @@
     "Back": "Back",
 
     "Ready": "Ready",
+    "NotReady": "Not Ready",
     "StartGame": "Start Game",
     "Leave": "Leave",
 
@@ -41,6 +42,6 @@
     "IamReady": "I am Ready",
     "PlayAgain": "Play Again",
     "YouWin": "You win",
-    "You lose": "You lose"
+    "Youlose": "You lose"
   }
 }   

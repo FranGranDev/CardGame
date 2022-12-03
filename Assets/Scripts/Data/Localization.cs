@@ -36,9 +36,9 @@ public static class Localization
         string path = Application.streamingAssetsPath + "/Languages/" + currantLanguage + ".json";
 
 
-#if UNITY_ANDROID && !UNITY_EDITOR
+#if UNITY_ANDROID
         LoadDataAndroid(path, callback);
-#elif UNITY_EDITOR
+#else
         LoadDataPC(path, callback);
 #endif
     }
@@ -98,6 +98,7 @@ public struct LobbyData
     public string Back;
 
     public string Ready;
+    public string NotReady;
     public string StartGame;
     public string Leave;
 

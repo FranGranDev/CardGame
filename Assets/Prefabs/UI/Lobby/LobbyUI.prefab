@@ -1079,7 +1079,7 @@ MonoBehaviour:
   Name: UI | PlayerName
   show:
     time: 0.5
-    delay: 0.25
+    delay: 0.33
     ease: 13
   hide:
     time: 0.5
@@ -2045,7 +2045,7 @@ MonoBehaviour:
   Name: UI | JoinRandomRoom
   show:
     time: 0.5
-    delay: 0.3
+    delay: 0.33
     ease: 13
   hide:
     time: 0.5
@@ -2808,7 +2808,7 @@ MonoBehaviour:
   Name: UI | Flags
   show:
     time: 0.5
-    delay: 0
+    delay: 0.33
     ease: 13
   hide:
     time: 0.5
@@ -4644,7 +4644,7 @@ MonoBehaviour:
   Name: UI | CreateRoom
   show:
     time: 0.5
-    delay: 0.3
+    delay: 0.33
     ease: 13
   hide:
     time: 0.5
@@ -4983,7 +4983,7 @@ MonoBehaviour:
   Name: UI | Stats
   show:
     time: 0.5
-    delay: 0.3
+    delay: 0.33
     ease: 13
   hide:
     time: 0.5
@@ -7808,7 +7808,7 @@ MonoBehaviour:
   Name: UI | SoundOn
   show:
     time: 0.5
-    delay: 0
+    delay: 0.33
     ease: 13
   hide:
     time: 0.5

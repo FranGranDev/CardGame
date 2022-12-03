@@ -20,6 +20,11 @@ namespace Managament
         private List<PlayerWrapper> players;
         private System.Action<Data> onClientGetServerData;
 
+        private PlayerWrapper self
+        {
+            get => players.First(x => x.Local);
+        }
+
         public event System.Action OnRestartGame;
         public event System.Action<PlayerWrapper> OnOtherReadyChanged;
         public event System.Action<PlayerWrapper> OnOtherExit;
@@ -73,6 +78,8 @@ namespace Managament
         }
         private void SubscribeForGameActions()
         {
+            self.OnAction += OnPlayersAction;
+
             deck.OnDeckGenerated += OnDeckGenerated;
             deck.OnSendCard += OnDeckSendCard;
 
@@ -225,20 +232,17 @@ namespace Managament
             table.PlaceCard(key, info, player);
         }
 
-        private void OnPlayersStatesChanged(PlayerWrapper attacker, PlayerWrapper defender)
+        private void OnPlayersAction(PlayerWrapper player)
         {
-            object[] data = new object[2]
-            {
-                new PlayerWrapper.Data(attacker),
-                new PlayerWrapper.Data(defender),
-            };
-
-            photonView.RPC(nameof(DoPlayersStatesChange), RpcTarget.Others, data);
+            photonView.RPC(nameof(DoPlayersAction), RpcTarget.Others, player.Id);
         }
         [PunRPC]
-        public void DoPlayersStatesChange(object[] data)
+        public void DoPlayersAction(object data)
         {
-            table.UpdatePlayersStates((PlayerWrapper.Data)data[0], (PlayerWrapper.Data)data[1]);
+            int id = (int)data;
+            PlayerWrapper player = players.First(x => x.Id == id);
+
+            player.DoAction();
         }
 
         private void OnTableNextMove(int move, PlayerWrapper attacker, PlayerWrapper defender)

@@ -35,11 +35,14 @@ namespace UI
                     case Place.Lobby:
                         item.SetText((string)data.Lobby.GetType().GetField(item.FieldName).GetValue(data.Lobby));
                         break;
+                    case Place.Game:
+                        item.SetText((string)data.Game.GetType().GetField(item.FieldName).GetValue(data.Game));
+                        break;
                 }
             }
             catch
             {
-                Debug.LogError($"No such filed finded by id: {item.FieldName}");
+                Debug.LogError($"No such filed finded by id: {item.FieldName}", item.gameObject);
             }
         }
     }

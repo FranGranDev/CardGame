@@ -66,12 +66,6 @@ namespace Lobby
         }
         private Dictionary<PanelStateTypes, List<IUiBehavior>> statePanels;
         private Dictionary<PanelStateTypes, GameObject> stateObjects;
-        private Dictionary<ButtonStateTypes, string> buttonStateNames = new Dictionary<ButtonStateTypes, string>()
-        {
-            {ButtonStateTypes.MakeNotReady, "Not Ready" },
-            {ButtonStateTypes.MakeReady, "Make Ready!" },
-            {ButtonStateTypes.StartGame, "Start Game!" },
-        };
         private Dictionary<DataBase.MatchData.Types, string> matchTypeNames = new Dictionary<DataBase.MatchData.Types, string>()
         {
             {DataBase.MatchData.Types.Game, "Full Game" },
@@ -98,7 +92,18 @@ namespace Lobby
             set
             {
                 buttonState = value;
-                buttonText.text = buttonStateNames[value];
+                switch(value)
+                {
+                    case ButtonStateTypes.MakeNotReady:
+                        buttonText.text = Localization.CurrantData.Lobby.NotReady;
+                        break;
+                    case ButtonStateTypes.MakeReady:
+                        buttonText.text = Localization.CurrantData.Lobby.Ready;
+                        break;
+                    case ButtonStateTypes.StartGame:
+                        buttonText.text = Localization.CurrantData.Lobby.StartGame;
+                        break;
+                }
             }
         }
 
