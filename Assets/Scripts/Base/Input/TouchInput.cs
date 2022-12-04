@@ -120,6 +120,5 @@ namespace TouchInput
         {
             InputExecute();
         }
-
     }
 }

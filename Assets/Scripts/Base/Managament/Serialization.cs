@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Managament
 {
-    class Serialization
+    public static class Serialization
     {
         public static object DeserializeVector2Int(byte[] data)
         {
