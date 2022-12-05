@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Cards;
 using TMPro;
+using Audio;
 
 namespace UI
 {
@@ -21,6 +22,10 @@ namespace UI
         [Header("Panels")]
         [SerializeField] private UIPanel readyButtonPanel;
         [SerializeField] private UIPanel rematchButtonPanel;
+        [Header("Sound")]
+        [SerializeField] private bool playSound;
+        [SerializeField] private string soundId;
+        [SerializeField] private float soundVolume = 1;
 
 
         private System.Action onReady;
@@ -40,6 +45,11 @@ namespace UI
             IsShown = true;
 
             UpdateState(state);
+
+            if(playSound)
+            {
+                SoundManagment.PlaySound(soundId, null, soundVolume, show.time);
+            }
         }
         public void UpdateState(States state)
         {

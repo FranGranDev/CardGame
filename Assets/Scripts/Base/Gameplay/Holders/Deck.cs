@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using Cards.Data;
+using Audio;
 using TMPro;
 
 
@@ -177,6 +178,8 @@ namespace Cards
                 {
                     remainingText.text = CardsCount.ToString();
                 }
+
+                SoundManagment.PlaySound("deal");
             }
         }
     }

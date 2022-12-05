@@ -13,8 +13,6 @@ namespace UI
         {
             List<LocalizationItem> items = new List<LocalizationItem>(GetComponentsInChildren<LocalizationItem>(true));
 
-            Debug.Log($"Set language: {language} | {items.Count}");
-
             Localization.LoadLanguage(language, this, (data) =>
             {
                 foreach (LocalizationItem item in items)

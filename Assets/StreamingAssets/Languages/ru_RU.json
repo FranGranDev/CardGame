@@ -9,6 +9,9 @@
     "EnterText": "Введите текст",
     "Loading": "Загрузка",
 
+    "JoinRoom": "Присоединиться к лобби",
+    "JoinRoomError": "Can't join room",
+
     "RoomName": "Имя комнаты",
     "Create": "Создать",
     "Back": "Назад",
@@ -42,6 +45,6 @@
     "IamReady": "Я готов",
     "PlayAgain": "Играть еще",
     "YouWin": "Победа",
-    "Youlose": "Поражение"
+    "YouLose": "Поражение"
   }
 }   

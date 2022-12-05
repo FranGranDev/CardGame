@@ -185,6 +185,7 @@ GameObject:
   - component: {fileID: 4708892816043768964}
   - component: {fileID: 7489203469815407297}
   - component: {fileID: 6873100642353755818}
+  - component: {fileID: 593609052398258044}
   m_Layer: 5
   m_Name: LeaveButton
   m_TagString: Untagged
@@ -306,6 +307,41 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 593609052398258044}
+        m_TargetAssemblyTypeName: UI.UIClick, UI
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &593609052398258044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 513487732966420983}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d958465d1e2bb84bbe19299b5dedc6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animationType: 1
+  panel: {fileID: 7392693690387332457}
+  value: 0.33
+  time: 0.5
+  vibration: 5
+  ease: 4
+  playSound: 1
+  soundId: click
+  soundVolume: 1
+  soundDelay: 0
+  checkIAddictive: 1
 --- !u!1 &2361848467882434535
 GameObject:
   m_ObjectHideFlags: 0
@@ -1211,6 +1247,14 @@ PrefabInstance:
       propertyPath: Name
       value: UI | GameWinPopup
       objectReference: {fileID: 0}
+    - target: {fileID: 8296166298625525466, guid: b9f38bcbbc3e8dd46a7f71592ad4fafb, type: 3}
+      propertyPath: soundId
+      value: win
+      objectReference: {fileID: 0}
+    - target: {fileID: 8296166298625525466, guid: b9f38bcbbc3e8dd46a7f71592ad4fafb, type: 3}
+      propertyPath: playSound
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9005357449304351415, guid: b9f38bcbbc3e8dd46a7f71592ad4fafb, type: 3}
       propertyPath: m_fontAsset
       value: 
@@ -1585,6 +1629,14 @@ PrefabInstance:
     - target: {fileID: 8296166298625525466, guid: b9f38bcbbc3e8dd46a7f71592ad4fafb, type: 3}
       propertyPath: Name
       value: UI | GameLosePopup
+      objectReference: {fileID: 0}
+    - target: {fileID: 8296166298625525466, guid: b9f38bcbbc3e8dd46a7f71592ad4fafb, type: 3}
+      propertyPath: soundId
+      value: lose
+      objectReference: {fileID: 0}
+    - target: {fileID: 8296166298625525466, guid: b9f38bcbbc3e8dd46a7f71592ad4fafb, type: 3}
+      propertyPath: playSound
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9005357449304351415, guid: b9f38bcbbc3e8dd46a7f71592ad4fafb, type: 3}
       propertyPath: m_fontAsset

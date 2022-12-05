@@ -25,6 +25,11 @@ namespace Lobby
         [SerializeField] private UILanguageChanger languageChanger;
         [SerializeField] private GameObject startPanel;
         [SerializeField] private TMP_InputField startInputName;
+        [SerializeField] private UIToggle soundToggle;
+        [Header("UI Join Room")]
+        [SerializeField] private GameObject jointPanel;
+        [SerializeField] private TMP_InputField joinRoomName;
+        [SerializeField] private TextMeshProUGUI joinRoomError;
         [Header("UI Stats Menu")]
         [SerializeField] private GameObject statsPanel;
         [SerializeField] private TextMeshProUGUI statsMatchesCount;
@@ -33,8 +38,6 @@ namespace Lobby
         [SerializeField] private TextMeshProUGUI statsWinRate;
         [SerializeField] private Transform matchesInfoContent;
         [SerializeField] private UIMatchInfo matchInfoPrefab;
-        [Header("UI Room List")]
-        [SerializeField] private GameObject roomListPanel;
         [Header("UI Create Room")]
         [SerializeField] private GameObject createRoomPanel;
         [SerializeField] private TMP_InputField roomInputName;
@@ -59,7 +62,7 @@ namespace Lobby
         {
             Loading,
             Start,
-            RoomList,
+            JoinRoom,
             CreateRoom,
             WaitPlayers,
             GameStats,
@@ -109,12 +112,11 @@ namespace Lobby
 
         private void Awake()
         {
+            SetupSettings();
             InitilizeUI();
         }
         private void Start()
         {
-            SetupSettings();
-
             noInternetPanel.IsShown = true;
 
             PanelState = PanelStateTypes.Loading;
@@ -129,7 +131,7 @@ namespace Lobby
             {PanelStateTypes.Loading, loadingPanel.GetComponentsInChildren<IUiBehavior>(true).ToList() },
             {PanelStateTypes.Start, startPanel.GetComponentsInChildren<IUiBehavior>(true).ToList() },
             {PanelStateTypes.CreateRoom, createRoomPanel.GetComponentsInChildren<IUiBehavior>(true).ToList() },
-            {PanelStateTypes.RoomList, roomListPanel.GetComponentsInChildren<IUiBehavior>(true).ToList() },
+            {PanelStateTypes.JoinRoom, jointPanel.GetComponentsInChildren<IUiBehavior>(true).ToList() },
             {PanelStateTypes.WaitPlayers, waitingRoomPanel.GetComponentsInChildren<IUiBehavior>(true).ToList() },
             {PanelStateTypes.GameStats, statsPanel.GetComponentsInChildren<IUiBehavior>(true).ToList() },
         };
@@ -138,7 +140,7 @@ namespace Lobby
             {PanelStateTypes.Start, startPanel.gameObject},
             {PanelStateTypes.Loading, loadingPanel.gameObject},
             {PanelStateTypes.CreateRoom, createRoomPanel.gameObject },
-            {PanelStateTypes.RoomList, roomListPanel.gameObject },
+            {PanelStateTypes.JoinRoom, jointPanel.gameObject },
             {PanelStateTypes.WaitPlayers, waitingRoomPanel.gameObject },
             {PanelStateTypes.GameStats, statsPanel.gameObject },
             };
@@ -155,8 +157,12 @@ namespace Lobby
                 obj.SetActive(false);
             }
 
+
             languageChanger.OnChanged += SetNextLanguage;
+            soundToggle.Init(MuteSound, DataBase.SoundMuted);
             localizationController.SetLanguage(DataBase.Language, LocalizationController.Place.Lobby);
+
+            AudioListener.pause = DataBase.SoundMuted;
         }
 
         private void SetupSettings()
@@ -197,6 +203,10 @@ namespace Lobby
                 case PanelStateTypes.CreateRoom:
                     roomInputName.text = DataBase.Room;
                     break;
+                case PanelStateTypes.JoinRoom:
+                    joinRoomName.text = DataBase.PrevRoom;
+                    joinRoomError.gameObject.SetActive(false);
+                    break;
                 case PanelStateTypes.Start:
                     startInputName.text = PhotonNetwork.NickName;
                     break;
@@ -218,12 +228,17 @@ namespace Lobby
         public void OnChangeNickName()
         {
             DataBase.Name = startInputName.text;
-            PhotonNetwork.NickName = startInputName.text;
+            PhotonNetwork.NickName = DataBase.Name;
+        }
+        public void GoJoinRoom()
+        {
+            PanelState = PanelStateTypes.JoinRoom;
         }
         public void JoinRandomRoom()
         {
             PhotonNetwork.JoinRandomRoom();
         }
+        
         public void GoCreateRoom()
         {
             PanelState = PanelStateTypes.CreateRoom;
@@ -239,6 +254,11 @@ namespace Lobby
         }
 
 
+        private void MuteSound(bool value)
+        {
+            DataBase.SoundMuted = value;
+            AudioListener.pause = value;
+        }
         private void SetNextLanguage()
         {
             int currant = Localization.AllLanguages.IndexOf(DataBase.Language);
@@ -269,6 +289,7 @@ namespace Lobby
             }
 
             IEnumerable<DataBase.MatchData> matches = DataBase.GetAllMatches;
+            matches = matches.Reverse();
 
             int count = 0;
             int victory = 0;
@@ -277,8 +298,11 @@ namespace Lobby
 
             foreach (DataBase.MatchData match in matches)
             {
-                UIMatchInfo info = Instantiate(matchInfoPrefab, matchesInfoContent);
-                info.Initilize(match.Winner, match.Looser, matchTypeNames[match.EndType], match.Victory);
+                if (count < 10)
+                {
+                    UIMatchInfo info = Instantiate(matchInfoPrefab, matchesInfoContent);
+                    info.Initilize(match.Winner, match.Looser, matchTypeNames[match.EndType], match.Victory);
+                }
 
                 count++;
                 if(match.Victory)
@@ -310,6 +334,19 @@ namespace Lobby
         public void CreateRoom()
         {
             PhotonNetwork.CreateRoom(DataBase.Room, new Photon.Realtime.RoomOptions { MaxPlayers = 2 });
+        }
+
+        #endregion
+
+        #region Join Room
+
+        public void OnChangeJoinRoomName()
+        {
+            DataBase.PrevRoom = joinRoomName.text;
+        }
+        public void JoinRoom()
+        {
+            PhotonNetwork.JoinRoom(DataBase.PrevRoom);
         }
 
         #endregion
@@ -390,6 +427,15 @@ namespace Lobby
             PhotonView.Get(this).RPC(nameof(UpdatePlayerState), RpcTarget.MasterClient, PhotonNetwork.LocalPlayer.ActorNumber, selfItem.IsReady);
             UpdateButtonState();
         }
+        public override void OnJoinRoomFailed(short returnCode, string message)
+        {
+            joinRoomError.gameObject.SetActive(true);
+            Debug.Log(message);
+        }
+        public override void OnJoinRandomFailed(short returnCode, string message)
+        {
+            Debug.Log(message);
+        }
         public override void OnLeftRoom()
         {
             if (selfItem)
@@ -400,6 +446,15 @@ namespace Lobby
             GoMainMenu();
         }
 
+        private void Update()
+        {
+#if UNITY_EDITOR
+            if(Input.GetKeyDown(KeyCode.J))
+            {
+                PhotonNetwork.JoinRandomRoom();
+            }
+#endif
+        }
 
         #endregion
     }

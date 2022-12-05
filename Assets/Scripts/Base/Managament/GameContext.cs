@@ -87,6 +87,8 @@ namespace Managament
 
             currantState = States.Game;
             hostController.StartGame(isOffline);
+
+            AudioListener.pause = DataBase.SoundMuted;
         }
 
 

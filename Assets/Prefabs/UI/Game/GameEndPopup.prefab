@@ -197,6 +197,9 @@ MonoBehaviour:
   rematchButton: {fileID: 5955346994823513960}
   readyButtonPanel: {fileID: 5637112552951727594}
   rematchButtonPanel: {fileID: 2044546984636875440}
+  playSound: 0
+  soundId: 
+  soundVolume: 1
 --- !u!1 &1383008784318396940
 GameObject:
   m_ObjectHideFlags: 0
@@ -687,6 +690,7 @@ GameObject:
   - component: {fileID: 1337443176036217324}
   - component: {fileID: 6815073594098049826}
   - component: {fileID: 7577506423950464673}
+  - component: {fileID: 2395442511915106027}
   m_Layer: 5
   m_Name: Exit
   m_TagString: Untagged
@@ -808,6 +812,41 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 2395442511915106027}
+        m_TargetAssemblyTypeName: UI.UIClick, UI
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &2395442511915106027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3018229646037438345}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d958465d1e2bb84bbe19299b5dedc6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animationType: 1
+  panel: {fileID: 452028136038906927}
+  value: 0.1
+  time: 0.25
+  vibration: 5
+  ease: 4
+  playSound: 1
+  soundId: click
+  soundVolume: 1
+  soundDelay: 0
+  checkIAddictive: 1
 --- !u!1 &3434699891204742694
 GameObject:
   m_ObjectHideFlags: 0
@@ -821,6 +860,7 @@ GameObject:
   - component: {fileID: 8566495655255037005}
   - component: {fileID: 5955346994823513960}
   - component: {fileID: 2044546984636875440}
+  - component: {fileID: 5058587313412128407}
   m_Layer: 5
   m_Name: Rematch
   m_TagString: Untagged
@@ -942,6 +982,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 5058587313412128407}
+        m_TargetAssemblyTypeName: UI.UIClick, UI
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2044546984636875440
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -968,6 +1020,29 @@ MonoBehaviour:
   uiAnimations: 01000000
   showPoint: {fileID: 0}
   hidePoint: {fileID: 0}
+--- !u!114 &5058587313412128407
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3434699891204742694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d958465d1e2bb84bbe19299b5dedc6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animationType: 1
+  panel: {fileID: 8791466353247675082}
+  value: 0.1
+  time: 0.25
+  vibration: 5
+  ease: 4
+  playSound: 1
+  soundId: click
+  soundVolume: 1
+  soundDelay: 0
+  checkIAddictive: 1
 --- !u!1 &3477875978485640265
 GameObject:
   m_ObjectHideFlags: 0
@@ -1385,6 +1460,7 @@ GameObject:
   - component: {fileID: 29998308695035727}
   - component: {fileID: 8261845754260145528}
   - component: {fileID: 5637112552951727594}
+  - component: {fileID: 6656018386432844506}
   m_Layer: 5
   m_Name: Ready
   m_TagString: Untagged
@@ -1506,6 +1582,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 6656018386432844506}
+        m_TargetAssemblyTypeName: UI.UIClick, UI
+        m_MethodName: Play
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &5637112552951727594
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1532,6 +1620,29 @@ MonoBehaviour:
   uiAnimations: 01000000
   showPoint: {fileID: 0}
   hidePoint: {fileID: 0}
+--- !u!114 &6656018386432844506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7268541277680828923}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d958465d1e2bb84bbe19299b5dedc6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animationType: 1
+  panel: {fileID: 4393176404580002317}
+  value: 0.1
+  time: 0.25
+  vibration: 5
+  ease: 4
+  playSound: 1
+  soundId: click
+  soundVolume: 1
+  soundDelay: 0
+  checkIAddictive: 1
 --- !u!1 &7803769873503868281
 GameObject:
   m_ObjectHideFlags: 0

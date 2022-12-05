@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
+using Audio;
 
 namespace Cards
 {
@@ -305,6 +306,8 @@ namespace Cards
             Quaternion rotation = Quaternion.Euler(0, Random.Range(PlaceAttackRotationOffset.x, PlaceAttackRotationOffset.y), 0);
 
             card.DoMove(animation, position, rotation, time, ICardAnimation.Order.Override);
+
+            SoundManagment.PlaySound("place");
         }
         private void PlaceDefendCard(PairPoint point, Card card, ICardAnimation.Types animation, float time)
         {
@@ -316,6 +319,8 @@ namespace Cards
             Quaternion rotation = Quaternion.Euler(0, Random.Range(PlaceDefendRotationOffset.x, PlaceDefendRotationOffset.y), 0);
 
             card.DoMove(animation, position, rotation, time, ICardAnimation.Order.Override);
+
+            SoundManagment.PlaySound("place");
         }
 
 
@@ -333,11 +338,15 @@ namespace Cards
                 }
             }
 
+            SoundManagment.PlaySound("take");
+
             ClearPairs();
         }
         private void SendAllCard(DiscardPile discardPile)
         {
             discardPile.Drop(currantPairs);
+
+            SoundManagment.PlaySound("discard");
 
             ClearPairs();
         }

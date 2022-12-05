@@ -16,8 +16,11 @@ public class DataBase : MonoBehaviour
     //Lobby
     private const string LOBBY_NAME = "name";
     private const string LOBBY_ROOM = "room";
+    private const string LOBBY_PREV_ROOM = "prev_room";
     //Language
     private const string LANGUAGE_CURRANT = "language";
+    //Sound
+    private const string SOUND_CURRANT = "sound";
     #endregion
 
     #region Localization
@@ -26,6 +29,16 @@ public class DataBase : MonoBehaviour
     {
         get => PlayerPrefs.GetString(LANGUAGE_CURRANT, "en_US");
         set => PlayerPrefs.SetString(LANGUAGE_CURRANT, value);
+    }
+
+    #endregion
+
+    #region Sound
+
+    public static bool SoundMuted
+    {
+        get => PlayerPrefs.GetInt(SOUND_CURRANT, 0) == 1;
+        set => PlayerPrefs.SetInt(SOUND_CURRANT, value ? 1 : 0);
     }
 
     #endregion
@@ -84,6 +97,12 @@ public class DataBase : MonoBehaviour
     {
         get => PlayerPrefs.GetString(LOBBY_ROOM, $"Room {Random.Range(0, 999)}");
         set => PlayerPrefs.SetString(LOBBY_ROOM, value);
+    }
+
+    public static string PrevRoom
+    {
+        get => PlayerPrefs.GetString(LOBBY_PREV_ROOM, null);
+        set => PlayerPrefs.SetString(LOBBY_PREV_ROOM, value);
     }
 
     #endregion

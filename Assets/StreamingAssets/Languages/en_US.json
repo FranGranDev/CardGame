@@ -9,6 +9,11 @@
     "EnterText": "Enter Text",
     "Loading": "Loading",
 
+
+
+    "JoinRoom": "Join Room",
+    "JoinRoomError": "Can't join room",
+
     "RoomName": "Room Name",
     "Create": "Create",
     "Back": "Back",
@@ -42,6 +47,6 @@
     "IamReady": "I am Ready",
     "PlayAgain": "Play Again",
     "YouWin": "You win",
-    "Youlose": "You lose"
+    "YouLose": "You lose"
   }
 }   

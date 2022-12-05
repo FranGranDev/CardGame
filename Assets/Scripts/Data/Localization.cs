@@ -91,6 +91,10 @@ public struct LobbyData
 
     public string EnterText;
     public string Loading;
+    //Join Room
+
+    public string JoinRoom;
+    public string JoinRoomError;
 
     //RoomCreate
     public string RoomName;

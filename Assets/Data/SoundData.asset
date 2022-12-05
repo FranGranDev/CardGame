@@ -1,0 +1,81 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 569f4c4e48b350f44865e2aa271e6f59, type: 3}
+  m_Name: SoundData
+  m_EditorClassIdentifier: 
+  soundItems:
+  - name: Click
+    id: click
+    Clips:
+    - {fileID: 8300000, guid: 415c92bcf3d44fb4199ef8ed2abf5cd4, type: 3}
+    Volume: 0.25
+    Pitch: 1
+    SpatialBlend: 0
+    MaxDistance: 100
+    maxInstance: 0
+  - name: Discard
+    id: discard
+    Clips:
+    - {fileID: 8300000, guid: cd58915ffa3f84e479dd4ce5e5981e4d, type: 3}
+    Volume: 1
+    Pitch: 1
+    SpatialBlend: 0
+    MaxDistance: 100
+    maxInstance: 0
+  - name: Place
+    id: place
+    Clips:
+    - {fileID: 8300000, guid: a474b5d79b8c51843af5242f894464d3, type: 3}
+    - {fileID: 8300000, guid: f6129106bfe7df547a6bec5654108455, type: 3}
+    - {fileID: 8300000, guid: aec5308f8f1beb24db692c7e1d83e666, type: 3}
+    Volume: 1
+    Pitch: 1
+    SpatialBlend: 0
+    MaxDistance: 100
+    maxInstance: 0
+  - name: Take
+    id: take
+    Clips:
+    - {fileID: 8300000, guid: 4c4ee424eafe43e47a0bae26543f1050, type: 3}
+    Volume: 1
+    Pitch: 1
+    SpatialBlend: 0
+    MaxDistance: 100
+    maxInstance: 0
+  - name: Win
+    id: win
+    Clips:
+    - {fileID: 8300000, guid: dac48c1e0b59b2842ab5e72059742d45, type: 3}
+    Volume: 0.5
+    Pitch: 1
+    SpatialBlend: 0
+    MaxDistance: 100
+    maxInstance: 0
+  - name: Lose
+    id: lose
+    Clips:
+    - {fileID: 8300000, guid: 62730fe034b7e9d46b81ec51b3a3332d, type: 3}
+    Volume: 0.5
+    Pitch: 1
+    SpatialBlend: 0
+    MaxDistance: 100
+    maxInstance: 0
+  - name: Deals
+    id: deal
+    Clips:
+    - {fileID: 8300000, guid: 91914ad42e2bb704d9313e07965233f8, type: 3}
+    Volume: 1
+    Pitch: 1
+    SpatialBlend: 0
+    MaxDistance: 100
+    maxInstance: 0
+  musicItems: []

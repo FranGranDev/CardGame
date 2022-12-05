@@ -7,6 +7,10 @@ namespace Audio
 {
     public class SoundManagment : MonoBehaviour
     {
+        public SoundManagment()
+        {
+            Active = this;
+        }
         public static SoundManagment Active { get; private set; }
 
         [SerializeField] private SoundData Data;

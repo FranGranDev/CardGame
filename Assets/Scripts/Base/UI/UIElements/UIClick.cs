@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using Audio;
 
 namespace UI
 {
@@ -22,6 +23,8 @@ namespace UI
 
         private IUIClickBehavior behavior;
         private List<IAddictive> loopAnimations = new List<IAddictive>();
+        private bool initilized = false;
+
 
         public bool IsPlaying
         {
@@ -31,15 +34,19 @@ namespace UI
 
         public void Play()
         {
-            behavior.Play();
+            if(!initilized)
+            {
+                Initilize();
+            }
+
+            behavior?.Play();
 
             if (playSound)
             {
-                //SoundManagment.PlaySound(soundId, null, 1, soundDelay);
+                SoundManagment.PlaySound(soundId, null, 1, soundDelay);
             }
         }
-
-        private void Start()
+        private void Initilize()
         {
             switch (animationType)
             {
@@ -49,10 +56,22 @@ namespace UI
                 case AnimationTypes.Scale:
                     behavior = new UIClickScale(panel, value, time, vibration, ease);
                     break;
+                case AnimationTypes.None:
+                    behavior = null;
+                    break;
             }
             if (checkIAddictive)
             {
                 loopAnimations = new List<IAddictive>(panel.GetComponentsInChildren<IAddictive>(true));
+            }
+            initilized = true;
+        }
+
+        private void Start()
+        {
+            if(!initilized)
+            {
+                Initilize();
             }
         }
         private void OnValidate()
@@ -65,7 +84,7 @@ namespace UI
 
         public enum AnimationTypes
         {
-            Scale, Rotation,
+            None, Scale, Rotation,
         }
 
         private void Update()
