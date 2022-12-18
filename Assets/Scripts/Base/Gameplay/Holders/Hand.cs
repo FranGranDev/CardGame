@@ -22,7 +22,7 @@ namespace Cards
         [SerializeField] private Transform rightPoint;
         [Header("Links")]
         [SerializeField] private CardFactory cardFactory;
-
+        
 
 
         public int CardsCount => cards.Count;

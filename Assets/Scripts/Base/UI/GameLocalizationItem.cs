@@ -5,8 +5,7 @@ using TMPro;
 
 namespace UI
 {
-    [RequireComponent(typeof(TextMeshProUGUI))]
-    public class LocalizationItem : MonoBehaviour, ILocalizationItem
+    public class GameLocalizationItem : MonoBehaviour, ILocalizationItem
     {
         [SerializeField] private string fieldName;
 
@@ -14,8 +13,9 @@ namespace UI
 
         public void SetText(string text)
         {
-            TextMeshProUGUI textMeshPro = GetComponent<TextMeshProUGUI>();
+            TextMeshPro textMeshPro = GetComponent<TextMeshPro>();
             textMeshPro.text = text;
         }
+        
     }
 }

@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using System.Linq;
 using Data;
 
 namespace UI
@@ -9,13 +11,20 @@ namespace UI
     {
         public enum Place { Lobby, Game}
 
+
         public void SetLanguage(string language, Place place)
         {
-            List<LocalizationItem> items = new List<LocalizationItem>(GetComponentsInChildren<LocalizationItem>(true));
+            List<ILocalizationItem> items = new List<ILocalizationItem>();
+            Scene scene = SceneManager.GetActiveScene();
+            
+            foreach (GameObject obj in scene.GetRootGameObjects())
+            {
+                items.AddRange(obj.GetComponentsInChildren<ILocalizationItem>(true));
+            }
 
             Localization.LoadLanguage(language, this, (data) =>
             {
-                foreach (LocalizationItem item in items)
+                foreach (ILocalizationItem item in items)
                 {
                     if (item == null)
                         continue;
@@ -24,7 +33,7 @@ namespace UI
             });
         }
 
-        private void SetupItem(LocalizationItem item, LanguageData data, Place place)
+        private void SetupItem(ILocalizationItem item, LanguageData data, Place place)
         {
             try
             {
@@ -40,7 +49,7 @@ namespace UI
             }
             catch
             {
-                Debug.LogError($"No such filed finded by id: {item.FieldName}", item.gameObject);
+                Debug.LogError($"No such filed finded by id: {item.FieldName}");
             }
         }
     }

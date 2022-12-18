@@ -134,4 +134,5 @@ public struct GameData
     public string PlayAgain;
     public string YouWin;
     public string YouLose;
+    public string ITake;
 }

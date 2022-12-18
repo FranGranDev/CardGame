@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using Cards;
@@ -13,6 +14,7 @@ namespace UI
         [SerializeField] private PlayerWrapper.MoveStates moveState;
 
         [Space, Header("End Game View")]
+        [SerializeField] private UIPanel takePanel;
         [SerializeField] private UIPanel endBackground;
         [SerializeField] private UIEndGame victory;
         [SerializeField] private UIEndGame defeat;
@@ -25,6 +27,7 @@ namespace UI
         private PlayerWrapper player;
         private PlayerWrapper enemy;
 
+        private Coroutine takeCoroutine;
 
         private UIEndGame currantEndPanel;
 
@@ -53,10 +56,11 @@ namespace UI
             this.player = player;
             this.enemy = enemy;
 
+
             player.OnStateChanged += UpdatePlayerState;
             enemy.OnStateChanged += UpdateEnemyState;
 
-
+            takePanel.Initilize();
             foreach(UIPanel panel in GetComponentsInChildren<UIPanel>(true))
             {
                 panel.Initilize();
@@ -147,6 +151,22 @@ namespace UI
             moveState = player.MoveState;
 
             UpdateButton(player);
+
+            switch(playerState)
+            {
+                case PlayerWrapper.PlayerStates.Defender:
+                    switch (moveState)
+                    {
+                        case PlayerWrapper.MoveStates.Pass:
+                            takePanel.IsShown = true;
+                            break;
+                        default:
+                            takePanel.IsShown = false;
+                            break;
+                    }
+                    break;
+            }
+
         }
         private void UpdateButton(PlayerWrapper player)
         {
